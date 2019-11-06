@@ -1,3 +1,4 @@
+package apresentacao;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -13,6 +14,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;

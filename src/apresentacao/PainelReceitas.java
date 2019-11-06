@@ -1,3 +1,4 @@
+package apresentacao;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -25,9 +26,9 @@ import java.awt.GridLayout;
 import javax.swing.JTable;
 import java.awt.Color;
 
-public class PainelContribuinte extends JPanel {
+public class PainelReceitas extends JPanel {
 
-	private JPanel cadastrarContribuinte;
+	private JPanel cadastrarReceita;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -37,7 +38,6 @@ public class PainelContribuinte extends JPanel {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
-	private JTextField textField_9;
 	private JTextField textField_10;
 	private JTable table;
 	JLayeredPane painelCentral;
@@ -49,7 +49,7 @@ public class PainelContribuinte extends JPanel {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PainelContribuinte frame = new PainelContribuinte();
+					PainelReceitas frame = new PainelReceitas();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +61,7 @@ public class PainelContribuinte extends JPanel {
 	/**
 	 * Create the frame.
 	 */
-	public PainelContribuinte() {
+	public PainelReceitas() {
 		initComponents();
 	}
 	public void initComponents() {
@@ -71,10 +71,10 @@ public class PainelContribuinte extends JPanel {
 		painelCentral = new JLayeredPane();
 		add(painelCentral);
 		painelCentral.setLayout(new CardLayout(0, 0));
-		cadastrarContribuinte = new JPanel();
-		painelCentral.add(cadastrarContribuinte, "name_7182598454947182");
-		cadastrarContribuinte.setBorder(new EmptyBorder(5, 5, 5, 5));
-		cadastrarContribuinte.setLayout(new BorderLayout(0, 0));
+		cadastrarReceita = new JPanel();
+		painelCentral.add(cadastrarReceita, "name_7182598454947182");
+		cadastrarReceita.setBorder(new EmptyBorder(5, 5, 5, 5));
+		cadastrarReceita.setLayout(new BorderLayout(0, 0));
 		
 		JPanel cadastro = new JPanel();
 		
@@ -104,19 +104,17 @@ public class PainelContribuinte extends JPanel {
 		textField_4.setColumns(10);
 		
 		JButton button = new JButton("Salvar");
-		cadastrarContribuinte.add(cadastro);
+		cadastrarReceita.add(cadastro);
 		
-		JLabel lblCadastroDeContribuinte = new JLabel("Cadastro de contribuinte");
+		JLabel lblCadastroDeReceita = new JLabel("Cadastro de receita");
 		
-		JLabel lblNome = new JLabel("Nome:");
+		JLabel lblCpfContr = new JLabel("CPF do contribuinte:");
 		
-		JLabel lblCpf = new JLabel("CPF:");
+		JLabel lblNumProtoc = new JLabel("Num. Protoc.:");
 		
-		JLabel lblIdade = new JLabel("Idade:");
+		JLabel lblCnpj = new JLabel("CNPJ:");
 		
-		JLabel lblEndereo = new JLabel("Endere\u00E7o:");
-		
-		JLabel lblContaBancaria = new JLabel("Conta bancaria:");
+		JLabel lblValor = new JLabel("Valor:");
 		
 		textField_5 = new JTextField();
 		textField_5.setColumns(10);
@@ -130,9 +128,6 @@ public class PainelContribuinte extends JPanel {
 		textField_8 = new JTextField();
 		textField_8.setColumns(10);
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		
 		JButton btnSalvar = new JButton("Salvar");
 		GroupLayout gl_cadastro = new GroupLayout(cadastro);
 		gl_cadastro.setHorizontalGroup(
@@ -141,149 +136,137 @@ public class PainelContribuinte extends JPanel {
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_cadastro.createSequentialGroup()
 							.addGap(103)
-							.addComponent(lblCadastroDeContribuinte))
+							.addComponent(lblCadastroDeReceita))
 						.addGroup(gl_cadastro.createSequentialGroup()
 							.addGap(126)
 							.addComponent(btnSalvar))
 						.addGroup(gl_cadastro.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCpf)
-								.addComponent(lblNome)
-								.addComponent(lblIdade)
-								.addComponent(lblEndereo)
-								.addComponent(lblContaBancaria))
-							.addGap(16)
+								.addComponent(lblNumProtoc)
+								.addComponent(lblCpfContr)
+								.addComponent(lblCnpj)
+								.addComponent(lblValor))
+							.addGap(26)
 							.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_cadastro.createSequentialGroup()
-									.addGap(10)
-									.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_cadastro.createSequentialGroup()
-									.addGap(10)
-									.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))))))
+								.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap(37, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_cadastro.setVerticalGroup(
 			gl_cadastro.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_cadastro.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblCadastroDeContribuinte)
+					.addComponent(lblCadastroDeReceita)
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNome)
+						.addComponent(lblCpfContr)
 						.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCpf)
+						.addComponent(lblNumProtoc)
 						.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblIdade)
+						.addComponent(lblCnpj)
 						.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblEndereo)
+						.addComponent(lblValor)
 						.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblContaBancaria)
-						.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
 					.addComponent(btnSalvar)
 					.addGap(39))
 		);
 		cadastro.setLayout(gl_cadastro);
 		
-		JPanel consultarContribuinte = new JPanel();
-		painelCentral.add(consultarContribuinte, "name_7183621705109210");
+		JPanel consultarReceitas = new JPanel();
+		painelCentral.add(consultarReceitas, "name_7183621705109210");
 		
 		textField_10 = new JTextField();
 		textField_10.setColumns(10);
 		
-		JLabel lblConsultarContribuintes = new JLabel("Consultar contribuintes");
+		JLabel lblConsultarReceitas = new JLabel("Consultar Receitas");
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
 		
 		table = new JTable();
-		GroupLayout gl_consultarContribuinte = new GroupLayout(consultarContribuinte);
-		gl_consultarContribuinte.setHorizontalGroup(
-			gl_consultarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_consultarContribuinte.createSequentialGroup()
-					.addGroup(gl_consultarContribuinte.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_consultarContribuinte.createSequentialGroup()
+		GroupLayout gl_consultarReceitas = new GroupLayout(consultarReceitas);
+		gl_consultarReceitas.setHorizontalGroup(
+			gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_consultarReceitas.createSequentialGroup()
+					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_consultarReceitas.createSequentialGroup()
 							.addGap(133)
-							.addComponent(lblConsultarContribuintes))
-						.addGroup(gl_consultarContribuinte.createSequentialGroup()
+							.addComponent(lblConsultarReceitas))
+						.addGroup(gl_consultarReceitas.createSequentialGroup()
 							.addGap(33)
 							.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnPesquisar))
-						.addGroup(gl_consultarContribuinte.createSequentialGroup()
+						.addGroup(gl_consultarReceitas.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(table, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
-		gl_consultarContribuinte.setVerticalGroup(
-			gl_consultarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_consultarContribuinte.createSequentialGroup()
+		gl_consultarReceitas.setVerticalGroup(
+			gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_consultarReceitas.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblConsultarContribuintes)
+					.addComponent(lblConsultarReceitas)
 					.addGap(18)
-					.addGroup(gl_consultarContribuinte.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.BASELINE)
 						.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnPesquisar))
 					.addGap(11)
 					.addComponent(table, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
 					.addContainerGap())
 		);
-		consultarContribuinte.setLayout(gl_consultarContribuinte);
+		consultarReceitas.setLayout(gl_consultarReceitas);
 		
-		JPanel alterarContribuinte = new JPanel();
-		painelCentral.add(alterarContribuinte, "name_7183845445072259");
+		JPanel alterarReceitas = new JPanel();
+		painelCentral.add(alterarReceitas, "name_7183845445072259");
 		
-		JLabel lblAlterarContribuinte = new JLabel("Alterar contribuinte");
-		GroupLayout gl_alterarContribuinte = new GroupLayout(alterarContribuinte);
-		gl_alterarContribuinte.setHorizontalGroup(
-			gl_alterarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarContribuinte.createSequentialGroup()
+		JLabel lblAlterarContribuinte = new JLabel("Alterar receitas");
+		GroupLayout gl_alterarReceitas = new GroupLayout(alterarReceitas);
+		gl_alterarReceitas.setHorizontalGroup(
+			gl_alterarReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_alterarReceitas.createSequentialGroup()
 					.addGap(137)
 					.addComponent(lblAlterarContribuinte)
 					.addContainerGap(166, Short.MAX_VALUE))
 		);
-		gl_alterarContribuinte.setVerticalGroup(
-			gl_alterarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarContribuinte.createSequentialGroup()
+		gl_alterarReceitas.setVerticalGroup(
+			gl_alterarReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_alterarReceitas.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblAlterarContribuinte)
 					.addContainerGap(275, Short.MAX_VALUE))
 		);
-		alterarContribuinte.setLayout(gl_alterarContribuinte);
+		alterarReceitas.setLayout(gl_alterarReceitas);
 		
-		JPanel removerContribuinte = new JPanel();
-		painelCentral.add(removerContribuinte, "name_7183864462826088");
+		JPanel removerReceitas = new JPanel();
+		painelCentral.add(removerReceitas, "name_7183864462826088");
 		
-		JLabel lblRemoverContribuinte = new JLabel("Remover contribuinte");
-		GroupLayout gl_removerContribuinte = new GroupLayout(removerContribuinte);
-		gl_removerContribuinte.setHorizontalGroup(
-			gl_removerContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerContribuinte.createSequentialGroup()
+		JLabel lblRemoverContribuinte = new JLabel("Remover receitas");
+		GroupLayout gl_removerReceitas = new GroupLayout(removerReceitas);
+		gl_removerReceitas.setHorizontalGroup(
+			gl_removerReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_removerReceitas.createSequentialGroup()
 					.addGap(120)
 					.addComponent(lblRemoverContribuinte)
 					.addContainerGap(126, Short.MAX_VALUE))
 		);
-		gl_removerContribuinte.setVerticalGroup(
-			gl_removerContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerContribuinte.createSequentialGroup()
+		gl_removerReceitas.setVerticalGroup(
+			gl_removerReceitas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_removerReceitas.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblRemoverContribuinte)
 					.addContainerGap(275, Short.MAX_VALUE))
 		);
-		removerContribuinte.setLayout(gl_removerContribuinte);
+		removerReceitas.setLayout(gl_removerReceitas);
 		
 		JPanel menuLateral = new JPanel();
 		add(menuLateral, BorderLayout.WEST);
@@ -292,7 +275,7 @@ public class PainelContribuinte extends JPanel {
 		btnNewButton.setBackground(new Color(143, 188, 143));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(cadastrarContribuinte);
+				switchPanels(cadastrarReceita);
 			}
 		});
 		
@@ -300,7 +283,7 @@ public class PainelContribuinte extends JPanel {
 		btnNewButton_1.setBackground(new Color(143, 188, 143));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(consultarContribuinte);
+				switchPanels(consultarReceitas);
 			}
 		});
 		
@@ -308,7 +291,7 @@ public class PainelContribuinte extends JPanel {
 		btnAlterar.setBackground(new Color(143, 188, 143));
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(alterarContribuinte);
+				switchPanels(alterarReceitas);
 			}
 		});
 		
@@ -316,7 +299,7 @@ public class PainelContribuinte extends JPanel {
 		btnRemover.setBackground(new Color(143, 188, 143));
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(removerContribuinte);
+				switchPanels(removerReceitas);
 			}
 		});
 		GroupLayout gl_menuLateral = new GroupLayout(menuLateral);
