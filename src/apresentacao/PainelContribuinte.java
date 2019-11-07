@@ -1,5 +1,6 @@
 package apresentacao;
 import java.awt.BorderLayout;
+import persistencia.DBConnection;
 import java.awt.EventQueue;
 
 import javax.swing.GroupLayout;
@@ -7,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
@@ -19,12 +21,16 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
 import javax.swing.JTable;
 import java.awt.Color;
+import javax.swing.JComboBox;
 
 public class PainelContribuinte extends JPanel {
 
@@ -34,14 +40,21 @@ public class PainelContribuinte extends JPanel {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
+	private JTextField inputNomeCadCont;
+	private JTextField inputCpfCadCont;
+	private JTextField inputIdadeCadCont;
+	private JTextField inputEndCadCont;
+	private JTextField inputContBanCadCont;
 	private JTextField textField_10;
 	private JTable table;
 	JLayeredPane painelCentral;
+	private JTextField textField_11;
+	private JTextField textField_12;
+	private JTextField textField_13;
+	private JTextField textField_14;
+	private JTextField textField_15;
+	private JTextField textField_16;
+	private JTextField textField_17;
 
 	/**
 	 * Launch the application.
@@ -119,22 +132,27 @@ public class PainelContribuinte extends JPanel {
 		
 		JLabel lblContaBancaria = new JLabel("Conta bancaria:");
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
+		inputNomeCadCont = new JTextField();
+		inputNomeCadCont.setColumns(10);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
+		inputCpfCadCont = new JTextField();
+		inputCpfCadCont.setColumns(10);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
+		inputIdadeCadCont = new JTextField();
+		inputIdadeCadCont.setColumns(10);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
+		inputEndCadCont = new JTextField();
+		inputEndCadCont.setColumns(10);
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
+		inputContBanCadCont = new JTextField();
+		inputContBanCadCont.setColumns(10);
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				funcCadastraContribuinte();
+			}
+		});
 		GroupLayout gl_cadastro = new GroupLayout(cadastro);
 		gl_cadastro.setHorizontalGroup(
 			gl_cadastro.createParallelGroup(Alignment.LEADING)
@@ -159,14 +177,14 @@ public class PainelContribuinte extends JPanel {
 								.addGroup(gl_cadastro.createSequentialGroup()
 									.addGap(10)
 									.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)))
+										.addComponent(inputIdadeCadCont, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+										.addComponent(inputContBanCadCont, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+										.addComponent(inputEndCadCont, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)))
 								.addGroup(gl_cadastro.createSequentialGroup()
 									.addGap(10)
 									.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))))))
+										.addComponent(inputNomeCadCont, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
+										.addComponent(inputCpfCadCont, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))))))
 					.addContainerGap(37, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_cadastro.setVerticalGroup(
@@ -177,23 +195,23 @@ public class PainelContribuinte extends JPanel {
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNome)
-						.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(inputNomeCadCont, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCpf)
-						.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(inputCpfCadCont, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblIdade)
-						.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(inputIdadeCadCont, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblEndereo)
-						.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(inputEndCadCont, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblContaBancaria)
-						.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(inputContBanCadCont, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
 					.addComponent(btnSalvar)
 					.addGap(39))
@@ -286,6 +304,173 @@ public class PainelContribuinte extends JPanel {
 		);
 		removerContribuinte.setLayout(gl_removerContribuinte);
 		
+		JPanel cadastrarBens = new JPanel();
+		painelCentral.add(cadastrarBens, "name_7288855328182789");
+		
+		JLabel lblCadastroDeBens = new JLabel("Cadastro de bens");
+		
+		JLabel lblNome_1 = new JLabel("Nome:");
+		
+		textField_11 = new JTextField();
+		textField_11.setColumns(10);
+		
+		JLabel lblTipo = new JLabel("Tipo:");
+		
+		textField_12 = new JTextField();
+		textField_12.setColumns(10);
+		
+		JLabel lblValor = new JLabel("Valor:");
+		
+		textField_13 = new JTextField();
+		textField_13.setColumns(10);
+		
+		JLabel lblContribuinte = new JLabel("Contribuinte:");
+		
+		JComboBox comboBox = new JComboBox();
+		
+		JButton btnSalvar_1 = new JButton("Salvar");
+		GroupLayout gl_cadastrarBens = new GroupLayout(cadastrarBens);
+		gl_cadastrarBens.setHorizontalGroup(
+			gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cadastrarBens.createSequentialGroup()
+					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_cadastrarBens.createSequentialGroup()
+							.addGap(102)
+							.addComponent(lblCadastroDeBens))
+						.addGroup(gl_cadastrarBens.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblContribuinte)
+								.addComponent(lblNome_1)
+								.addComponent(lblValor)
+								.addComponent(lblTipo))
+							.addGap(18)
+							.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+								.addComponent(textField_12, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_cadastrarBens.createSequentialGroup()
+							.addGap(111)
+							.addComponent(btnSalvar_1)))
+					.addContainerGap(55, Short.MAX_VALUE))
+		);
+		gl_cadastrarBens.setVerticalGroup(
+			gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cadastrarBens.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblCadastroDeBens)
+					.addGap(18)
+					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNome_1)
+						.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTipo)
+						.addComponent(textField_12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblValor)
+						.addComponent(textField_13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblContribuinte)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(49)
+					.addComponent(btnSalvar_1)
+					.addContainerGap(51, Short.MAX_VALUE))
+		);
+		cadastrarBens.setLayout(gl_cadastrarBens);
+		
+		JPanel cadastrarDependente = new JPanel();
+		painelCentral.add(cadastrarDependente, "name_7289327109052029");
+		
+		JLabel lblCadastrarDependente = new JLabel("Cadastrar dependente");
+		
+		JLabel lblNome_2 = new JLabel("Nome:");
+		
+		JLabel lblCpf_1 = new JLabel("CPF:");
+		
+		JLabel lblIdade_1 = new JLabel("Idade:");
+		
+		JLabel lblEndereo_1 = new JLabel("Endere\u00E7o:");
+		
+		JLabel lblContribuinte_1 = new JLabel("Contribuinte:");
+		
+		textField_14 = new JTextField();
+		textField_14.setColumns(10);
+		
+		textField_15 = new JTextField();
+		textField_15.setColumns(10);
+		
+		textField_16 = new JTextField();
+		textField_16.setColumns(10);
+		
+		textField_17 = new JTextField();
+		textField_17.setColumns(10);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		
+		JButton btnSalvar_2 = new JButton("Salvar");
+		GroupLayout gl_cadastrarDependente = new GroupLayout(cadastrarDependente);
+		gl_cadastrarDependente.setHorizontalGroup(
+			gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cadastrarDependente.createSequentialGroup()
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_cadastrarDependente.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblContribuinte_1)
+								.addComponent(lblNome_2)
+								.addComponent(lblCpf_1)
+								.addComponent(lblIdade_1)
+								.addComponent(lblEndereo_1))
+							.addGap(18)
+							.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_cadastrarDependente.createSequentialGroup()
+									.addGap(30)
+									.addComponent(lblCadastrarDependente))
+								.addComponent(textField_17, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+								.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_16, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_15, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addComponent(textField_14, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_cadastrarDependente.createSequentialGroup()
+							.addGap(102)
+							.addComponent(btnSalvar_2)))
+					.addContainerGap(38, Short.MAX_VALUE))
+		);
+		gl_cadastrarDependente.setVerticalGroup(
+			gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cadastrarDependente.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblCadastrarDependente)
+					.addGap(18)
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNome_2)
+						.addComponent(textField_14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCpf_1)
+						.addComponent(textField_15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblIdade_1)
+						.addComponent(textField_16, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblEndereo_1)
+						.addComponent(textField_17, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblContribuinte_1)
+						.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(btnSalvar_2)
+					.addContainerGap(44, Short.MAX_VALUE))
+		);
+		cadastrarDependente.setLayout(gl_cadastrarDependente);
+		
 		JPanel menuLateral = new JPanel();
 		add(menuLateral, BorderLayout.WEST);
 		
@@ -320,16 +505,34 @@ public class PainelContribuinte extends JPanel {
 				switchPanels(removerContribuinte);
 			}
 		});
+		
+		JButton btnCadastroDeBens = new JButton("Cadastro bens");
+		btnCadastroDeBens.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(cadastrarBens);
+			}
+		});
+		btnCadastroDeBens.setBackground(new Color(143, 188, 143));
+		
+		JButton btnCadastroDependente = new JButton("Cadastro dependente");
+		btnCadastroDependente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanels(cadastrarDependente);
+			}
+		});
+		btnCadastroDependente.setBackground(new Color(143, 188, 143));
 		GroupLayout gl_menuLateral = new GroupLayout(menuLateral);
 		gl_menuLateral.setHorizontalGroup(
 			gl_menuLateral.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_menuLateral.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_menuLateral.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnAlterar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnRemover, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(btnCadastroDeBens, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+						.addComponent(btnRemover, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+						.addComponent(btnAlterar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+						.addComponent(btnCadastroDependente))
 					.addContainerGap())
 		);
 		gl_menuLateral.setVerticalGroup(
@@ -338,14 +541,51 @@ public class PainelContribuinte extends JPanel {
 					.addContainerGap()
 					.addComponent(btnNewButton)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnCadastroDeBens)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnCadastroDependente)
+					.addGap(9)
 					.addComponent(btnNewButton_1)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnAlterar)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnRemover)
-					.addContainerGap(164, Short.MAX_VALUE))
+					.addContainerGap(98, Short.MAX_VALUE))
 		);
 		menuLateral.setLayout(gl_menuLateral);
+	}
+	public void funcCadastraContribuinte() {
+		try {
+			Connection con = DBConnection.faz_conexao();
+			String sql = "insert into contribuinte(nome, cpf, idade,endereco,conta_bancaria) values (?, ?, ?, ?, ?)";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setString(1, inputNomeCadCont.getText());
+			stmt.setString(2, inputCpfCadCont.getText());
+			stmt.setInt(3, Integer.parseInt(inputIdadeCadCont.getText()));
+			stmt.setString(4, inputEndCadCont.getText());
+			stmt.setInt(5, Integer.parseInt(inputContBanCadCont.getText()));
+
+			stmt.execute();
+			stmt.close();
+			con.close();
+			
+			JOptionPane.showMessageDialog(null, "Cadastro do Bem Realizado com Sucesso!");
+			
+			inputNomeCadCont.setText("");
+			inputCpfCadCont.setText("");
+			inputIdadeCadCont.setText("");
+			inputEndCadCont.setText("");
+			inputContBanCadCont.setText("");
+			
+			//comboBoxContri.setSelectedItem("");
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public void switchPanels(JPanel panel) {
 		painelCentral.removeAll();
