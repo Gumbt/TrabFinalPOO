@@ -57,7 +57,7 @@ public class TelaPrincipal extends JFrame {
 	public TelaPrincipal() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 578, 414);
+		setBounds(100, 100, 733, 440);
 		makeMenu();
 	}
 	public void makeMenu() {

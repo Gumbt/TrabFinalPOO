@@ -2,7 +2,9 @@ package apresentacao;
 import java.awt.BorderLayout;
 import persistencia.DBConnection;
 import java.awt.EventQueue;
+import dados.*;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,7 +25,10 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
@@ -31,6 +36,10 @@ import java.awt.GridLayout;
 import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.JScrollPane;
 
 public class PainelContribuinte extends JPanel {
 
@@ -45,32 +54,19 @@ public class PainelContribuinte extends JPanel {
 	private JTextField inputIdadeCadCont;
 	private JTextField inputEndCadCont;
 	private JTextField inputContBanCadCont;
-	private JTextField textField_10;
+	private JTextField searchInput;
 	private JTable table;
 	JLayeredPane painelCentral;
-	private JTextField textField_11;
-	private JTextField textField_12;
-	private JTextField textField_13;
-	private JTextField textField_14;
-	private JTextField textField_15;
-	private JTextField textField_16;
-	private JTextField textField_17;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PainelContribuinte frame = new PainelContribuinte();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextField nomeCadBem;
+	private JTextField tipoCadBem;
+	private JTextField valorCadBem;
+	private JTextField nomeCadDep;
+	private JTextField cpfCadDep;
+	private JTextField idadeCadDep;
+	private JTextField endCadDep;
+	private ContribuinteTableModel dataModel;
+	private JComboBox comboBoxCadBem;
+	private JComboBox comboBoxCadDep;
 
 	/**
 	 * Create the frame.
@@ -79,7 +75,7 @@ public class PainelContribuinte extends JPanel {
 		initComponents();
 	}
 	public void initComponents() {
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 583, 354);
 		setLayout(new BorderLayout(0, 0));
 		
 		painelCentral = new JLayeredPane();
@@ -221,14 +217,24 @@ public class PainelContribuinte extends JPanel {
 		JPanel consultarContribuinte = new JPanel();
 		painelCentral.add(consultarContribuinte, "name_7183621705109210");
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
+		searchInput = new JTextField();
+		searchInput.setColumns(10);
 		
 		JLabel lblConsultarContribuintes = new JLabel("Consultar contribuintes");
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
+				table.setModel(dataModel);
+			}
+		});
+		dataModel = new ContribuinteTableModel(criaListaContribuinte(null));
 		
-		table = new JTable();
+		JLabel lblCpf_2 = new JLabel("CPF:");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		
 		GroupLayout gl_consultarContribuinte = new GroupLayout(consultarContribuinte);
 		gl_consultarContribuinte.setHorizontalGroup(
 			gl_consultarContribuinte.createParallelGroup(Alignment.LEADING)
@@ -238,13 +244,15 @@ public class PainelContribuinte extends JPanel {
 							.addGap(133)
 							.addComponent(lblConsultarContribuintes))
 						.addGroup(gl_consultarContribuinte.createSequentialGroup()
-							.addGap(33)
-							.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
+							.addGap(9)
+							.addComponent(lblCpf_2)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(searchInput, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnPesquisar))
 						.addGroup(gl_consultarContribuinte.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(table, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		gl_consultarContribuinte.setVerticalGroup(
@@ -254,12 +262,17 @@ public class PainelContribuinte extends JPanel {
 					.addComponent(lblConsultarContribuintes)
 					.addGap(18)
 					.addGroup(gl_consultarContribuinte.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPesquisar))
+						.addComponent(searchInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnPesquisar)
+						.addComponent(lblCpf_2))
 					.addGap(11)
-					.addComponent(table, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-					.addContainerGap())
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 232, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(45, Short.MAX_VALUE))
 		);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		table.setModel(dataModel);
 		consultarContribuinte.setLayout(gl_consultarContribuinte);
 		
 		JPanel alterarContribuinte = new JPanel();
@@ -311,24 +324,29 @@ public class PainelContribuinte extends JPanel {
 		
 		JLabel lblNome_1 = new JLabel("Nome:");
 		
-		textField_11 = new JTextField();
-		textField_11.setColumns(10);
+		nomeCadBem = new JTextField();
+		nomeCadBem.setColumns(10);
 		
 		JLabel lblTipo = new JLabel("Tipo:");
 		
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
+		tipoCadBem = new JTextField();
+		tipoCadBem.setColumns(10);
 		
 		JLabel lblValor = new JLabel("Valor:");
 		
-		textField_13 = new JTextField();
-		textField_13.setColumns(10);
+		valorCadBem = new JTextField();
+		valorCadBem.setColumns(10);
 		
 		JLabel lblContribuinte = new JLabel("Contribuinte:");
 		
-		JComboBox comboBox = new JComboBox();
+		comboBoxCadBem = new JComboBox();
 		
 		JButton btnSalvar_1 = new JButton("Salvar");
+		btnSalvar_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				funcCadastraBem();
+			}
+		});
 		GroupLayout gl_cadastrarBens = new GroupLayout(cadastrarBens);
 		gl_cadastrarBens.setHorizontalGroup(
 			gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
@@ -346,10 +364,10 @@ public class PainelContribuinte extends JPanel {
 								.addComponent(lblTipo))
 							.addGap(18)
 							.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_12, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(tipoCadBem, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+								.addComponent(valorCadBem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(comboBoxCadBem, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nomeCadBem, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_cadastrarBens.createSequentialGroup()
 							.addGap(111)
 							.addComponent(btnSalvar_1)))
@@ -363,19 +381,19 @@ public class PainelContribuinte extends JPanel {
 					.addGap(18)
 					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNome_1)
-						.addComponent(textField_11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(nomeCadBem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblTipo)
-						.addComponent(textField_12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(tipoCadBem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblValor)
-						.addComponent(textField_13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(valorCadBem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarBens.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblContribuinte)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(comboBoxCadBem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(49)
 					.addComponent(btnSalvar_1)
 					.addContainerGap(51, Short.MAX_VALUE))
@@ -397,21 +415,26 @@ public class PainelContribuinte extends JPanel {
 		
 		JLabel lblContribuinte_1 = new JLabel("Contribuinte:");
 		
-		textField_14 = new JTextField();
-		textField_14.setColumns(10);
+		nomeCadDep = new JTextField();
+		nomeCadDep.setColumns(10);
 		
-		textField_15 = new JTextField();
-		textField_15.setColumns(10);
+		cpfCadDep = new JTextField();
+		cpfCadDep.setColumns(10);
 		
-		textField_16 = new JTextField();
-		textField_16.setColumns(10);
+		idadeCadDep = new JTextField();
+		idadeCadDep.setColumns(10);
 		
-		textField_17 = new JTextField();
-		textField_17.setColumns(10);
+		endCadDep = new JTextField();
+		endCadDep.setColumns(10);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		comboBoxCadDep = new JComboBox();
 		
 		JButton btnSalvar_2 = new JButton("Salvar");
+		btnSalvar_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				funcCadastraDependente();
+			}
+		});
 		GroupLayout gl_cadastrarDependente = new GroupLayout(cadastrarDependente);
 		gl_cadastrarDependente.setHorizontalGroup(
 			gl_cadastrarDependente.createParallelGroup(Alignment.LEADING)
@@ -430,11 +453,11 @@ public class PainelContribuinte extends JPanel {
 								.addGroup(gl_cadastrarDependente.createSequentialGroup()
 									.addGap(30)
 									.addComponent(lblCadastrarDependente))
-								.addComponent(textField_17, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
-								.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_16, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_15, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_14, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(endCadDep, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+								.addComponent(comboBoxCadDep, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+								.addComponent(idadeCadDep, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+								.addComponent(cpfCadDep, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nomeCadDep, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_cadastrarDependente.createSequentialGroup()
 							.addGap(102)
 							.addComponent(btnSalvar_2)))
@@ -448,23 +471,23 @@ public class PainelContribuinte extends JPanel {
 					.addGap(18)
 					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNome_2)
-						.addComponent(textField_14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(nomeCadDep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCpf_1)
-						.addComponent(textField_15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(cpfCadDep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblIdade_1)
-						.addComponent(textField_16, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(idadeCadDep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblEndereo_1)
-						.addComponent(textField_17, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(endCadDep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastrarDependente.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblContribuinte_1)
-						.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(comboBoxCadDep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addComponent(btnSalvar_2)
 					.addContainerGap(44, Short.MAX_VALUE))
@@ -486,6 +509,14 @@ public class PainelContribuinte extends JPanel {
 		btnNewButton_1.setBackground(new Color(143, 188, 143));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				searchInput.setText("");
+				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
+				table.setModel(dataModel);
+				//TableColumn colunaEstado = table.getColumnModel().getColumn(7);
+				//JButton visuAll = new JButton("Ver tudo");
+				//colunaEstado.setCellEditor((TableCellEditor) visuAll);
+				//table.setFillsViewportHeight(true);
+				
 				switchPanels(consultarContribuinte);
 			}
 		});
@@ -509,6 +540,7 @@ public class PainelContribuinte extends JPanel {
 		JButton btnCadastroDeBens = new JButton("Cadastro bens");
 		btnCadastroDeBens.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				atualizaComboBox(comboBoxCadBem);
 				switchPanels(cadastrarBens);
 			}
 		});
@@ -517,6 +549,7 @@ public class PainelContribuinte extends JPanel {
 		JButton btnCadastroDependente = new JButton("Cadastro dependente");
 		btnCadastroDependente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				atualizaComboBox(comboBoxCadDep);
 				switchPanels(cadastrarDependente);
 			}
 		});
@@ -571,20 +604,139 @@ public class PainelContribuinte extends JPanel {
 			stmt.close();
 			con.close();
 			
-			JOptionPane.showMessageDialog(null, "Cadastro do Bem Realizado com Sucesso!");
+			JOptionPane.showMessageDialog(null, "Cadastro de contribuinte realizado com sucesso!");
 			
 			inputNomeCadCont.setText("");
 			inputCpfCadCont.setText("");
 			inputIdadeCadCont.setText("");
 			inputEndCadCont.setText("");
-			inputContBanCadCont.setText("");
-			
-			//comboBoxContri.setSelectedItem("");
-			
+			inputContBanCadCont.setText("");			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	public void funcCadastraBem() {
+		try {
+			Connection con = DBConnection.faz_conexao();
+			String sql = "insert into bem(nome, tipo, valor,id_contribuinte) values (?, ?, ?, ?)";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setString(1, nomeCadBem.getText());
+			stmt.setString(2, tipoCadBem.getText());
+			stmt.setFloat(3, Float.parseFloat(valorCadBem.getText()));
+			Contribuinte contri = (Contribuinte) comboBoxCadBem.getSelectedItem();
+			stmt.setInt(4, contri.getId());
+
+			stmt.execute();
+			stmt.close();
+			con.close();
+			
+			JOptionPane.showMessageDialog(null, "Cadastro de bem realizado com sucesso!");
+			
+			nomeCadBem.setText("");
+			tipoCadBem.setText("");
+			valorCadBem.setText("");
+			comboBoxCadBem.setSelectedIndex(0);			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void funcCadastraDependente() {
+		try {
+			Connection con = DBConnection.faz_conexao();
+			String sql = "insert into dependente(nome, cpf, idade,endereco,id_contribuinte) values (?, ?, ?, ?, ?)";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setString(1, nomeCadDep.getText());
+			stmt.setString(2, cpfCadDep.getText());
+			stmt.setInt(3, Integer.parseInt(idadeCadDep.getText()));
+			stmt.setString(4, endCadDep.getText());
+			
+			
+			Contribuinte contri = (Contribuinte) comboBoxCadDep.getSelectedItem();
+			stmt.setInt(5, contri.getId());
+
+			stmt.execute();
+			stmt.close();
+			con.close();
+			
+			JOptionPane.showMessageDialog(null, "Cadastro de bem realizado com sucesso!");
+			
+			nomeCadDep.setText("");
+			cpfCadDep.setText("");
+			idadeCadDep.setText("");
+			endCadDep.setText("");
+			comboBoxCadDep.setSelectedIndex(0);			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private List<Contribuinte> criaListaContribuinte(String filtroCpf) {
+		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
+		try {
+			String sql;
+			Connection con = DBConnection.faz_conexao();
+			if(filtroCpf == null || filtroCpf == "") {
+				sql = "select * from contribuinte order by id_contribuinte DESC";				
+			}else {
+				sql = "select * from contribuinte where cpf like '%"+filtroCpf+"%' order by id_contribuinte DESC";
+			}
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next())
+            {
+				Contribuinte p = new Contribuinte();
+				p.setId(Integer.parseInt(rs.getString("id_contribuinte")));
+				p.setCpf(rs.getString("cpf"));
+				p.setNome(rs.getString("nome"));
+				p.setEndereco(rs.getString("endereco"));
+				p.setIdade(Integer.parseInt(rs.getString("idade")));
+				p.setContaBancaria(Integer.parseInt(rs.getString("conta_bancaria")));
+				pessoas.add(p);
+            }
+			stmt.close();
+			con.close();		
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
+		return pessoas;
+	}
+	public void atualizaComboBox(JComboBox<Contribuinte> comboBox) {
+		comboBox.removeAllItems();
+		try {
+			Connection con = DBConnection.faz_conexao();
+			String sql = "select * from contribuinte order by nome";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next())
+            {
+				Contribuinte p = new Contribuinte();
+				p.setId(Integer.parseInt(rs.getString("id_contribuinte")));
+				p.setCpf(rs.getString("cpf"));
+				p.setNome(rs.getString("nome"));
+				p.setEndereco(rs.getString("endereco"));
+				p.setIdade(Integer.parseInt(rs.getString("idade")));
+				p.setContaBancaria(Integer.parseInt(rs.getString("conta_bancaria")));
+				comboBox.addItem(p);
+            }
+			stmt.close();
+			con.close();		
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
 		}
 	}
 	public void switchPanels(JPanel panel) {

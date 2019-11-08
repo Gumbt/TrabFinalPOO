@@ -3,8 +3,8 @@ package dados;
 import java.util.List;
 
 public class Contribuinte {
-	
-	private int cpf;
+	private int id;
+	private String cpf;
 	private String nome;
 	private String endereco;
 	private int idade;
@@ -14,10 +14,13 @@ public class Contribuinte {
 	private List<NotaFiscal> despesas;
 	private List<Contracheque> receitas;
 	
-	public int getCpf() {
+	public String toString() {
+	    return this.nome;
+	}
+	public String getCpf() {
 		return cpf;
 	}
-	public void setCpf(int cpf) {
+	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 	public String getNome() {
@@ -43,6 +46,12 @@ public class Contribuinte {
 	}
 	public void setContaBancaria(int contaBancaria) {
 		this.contaBancaria = contaBancaria;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	
