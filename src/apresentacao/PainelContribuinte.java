@@ -1,5 +1,8 @@
 package apresentacao;
 import java.awt.BorderLayout;
+
+import persistencia.DBBusca;
+import persistencia.DBCadastro;
 import persistencia.DBConnection;
 import java.awt.EventQueue;
 import dados.*;
@@ -37,6 +40,7 @@ import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
@@ -226,7 +230,11 @@ public class PainelContribuinte extends JPanel {
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
+				
 				table.setModel(dataModel);
+				TableColumn colunaEstado = table.getColumnModel().getColumn(6);
+				TableCellRenderer testBtn = new JTableButtonRenderer(table,6,"Ver +");
+				colunaEstado.setCellRenderer(testBtn);
 			}
 		});
 		dataModel = new ContribuinteTableModel(criaListaContribuinte(null));
@@ -274,48 +282,6 @@ public class PainelContribuinte extends JPanel {
 		scrollPane.setViewportView(table);
 		table.setModel(dataModel);
 		consultarContribuinte.setLayout(gl_consultarContribuinte);
-		
-		JPanel alterarContribuinte = new JPanel();
-		painelCentral.add(alterarContribuinte, "name_7183845445072259");
-		
-		JLabel lblAlterarContribuinte = new JLabel("Alterar contribuinte");
-		GroupLayout gl_alterarContribuinte = new GroupLayout(alterarContribuinte);
-		gl_alterarContribuinte.setHorizontalGroup(
-			gl_alterarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarContribuinte.createSequentialGroup()
-					.addGap(137)
-					.addComponent(lblAlterarContribuinte)
-					.addContainerGap(166, Short.MAX_VALUE))
-		);
-		gl_alterarContribuinte.setVerticalGroup(
-			gl_alterarContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarContribuinte.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblAlterarContribuinte)
-					.addContainerGap(275, Short.MAX_VALUE))
-		);
-		alterarContribuinte.setLayout(gl_alterarContribuinte);
-		
-		JPanel removerContribuinte = new JPanel();
-		painelCentral.add(removerContribuinte, "name_7183864462826088");
-		
-		JLabel lblRemoverContribuinte = new JLabel("Remover contribuinte");
-		GroupLayout gl_removerContribuinte = new GroupLayout(removerContribuinte);
-		gl_removerContribuinte.setHorizontalGroup(
-			gl_removerContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerContribuinte.createSequentialGroup()
-					.addGap(120)
-					.addComponent(lblRemoverContribuinte)
-					.addContainerGap(126, Short.MAX_VALUE))
-		);
-		gl_removerContribuinte.setVerticalGroup(
-			gl_removerContribuinte.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerContribuinte.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblRemoverContribuinte)
-					.addContainerGap(275, Short.MAX_VALUE))
-		);
-		removerContribuinte.setLayout(gl_removerContribuinte);
 		
 		JPanel cadastrarBens = new JPanel();
 		painelCentral.add(cadastrarBens, "name_7288855328182789");
@@ -512,28 +478,12 @@ public class PainelContribuinte extends JPanel {
 				searchInput.setText("");
 				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
 				table.setModel(dataModel);
-				//TableColumn colunaEstado = table.getColumnModel().getColumn(7);
-				//JButton visuAll = new JButton("Ver tudo");
-				//colunaEstado.setCellEditor((TableCellEditor) visuAll);
-				//table.setFillsViewportHeight(true);
+				
+				TableColumn colunaEstado = table.getColumnModel().getColumn(6);//cria os botoes de ver +
+				TableCellRenderer testBtn = new JTableButtonRenderer(table,6,"Ver +");
+				colunaEstado.setCellRenderer(testBtn);
 				
 				switchPanels(consultarContribuinte);
-			}
-		});
-		
-		JButton btnAlterar = new JButton("Alterar");
-		btnAlterar.setBackground(new Color(143, 188, 143));
-		btnAlterar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels(alterarContribuinte);
-			}
-		});
-		
-		JButton btnRemover = new JButton("Remover");
-		btnRemover.setBackground(new Color(143, 188, 143));
-		btnRemover.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels(removerContribuinte);
 			}
 		});
 		
@@ -560,11 +510,9 @@ public class PainelContribuinte extends JPanel {
 				.addGroup(gl_menuLateral.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_menuLateral.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnCadastroDeBens, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-						.addComponent(btnRemover, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-						.addComponent(btnAlterar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+						.addComponent(btnCadastroDeBens, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
 						.addComponent(btnCadastroDependente))
 					.addContainerGap())
 		);
@@ -579,38 +527,30 @@ public class PainelContribuinte extends JPanel {
 					.addComponent(btnCadastroDependente)
 					.addGap(9)
 					.addComponent(btnNewButton_1)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnAlterar)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnRemover)
-					.addContainerGap(98, Short.MAX_VALUE))
+					.addContainerGap(220, Short.MAX_VALUE))
 		);
 		menuLateral.setLayout(gl_menuLateral);
 	}
 	public void funcCadastraContribuinte() {
 		try {
-			Connection con = DBConnection.faz_conexao();
-			String sql = "insert into contribuinte(nome, cpf, idade,endereco,conta_bancaria) values (?, ?, ?, ?, ?)";
+			boolean r = new DBCadastro().cadastroContribuinte(
+					inputNomeCadCont.getText(),
+					inputCpfCadCont.getText(),
+					Integer.parseInt(inputIdadeCadCont.getText()),
+					inputEndCadCont.getText(),
+					Integer.parseInt(inputContBanCadCont.getText())
+					);
 			
-			PreparedStatement stmt = con.prepareStatement(sql);
+			if(r) {
+				JOptionPane.showMessageDialog(null, "Cadastro de contribuinte realizado com sucesso!");
+				
+				inputNomeCadCont.setText("");
+				inputCpfCadCont.setText("");
+				inputIdadeCadCont.setText("");
+				inputEndCadCont.setText("");
+				inputContBanCadCont.setText("");						
+			}
 			
-			stmt.setString(1, inputNomeCadCont.getText());
-			stmt.setString(2, inputCpfCadCont.getText());
-			stmt.setInt(3, Integer.parseInt(inputIdadeCadCont.getText()));
-			stmt.setString(4, inputEndCadCont.getText());
-			stmt.setInt(5, Integer.parseInt(inputContBanCadCont.getText()));
-
-			stmt.execute();
-			stmt.close();
-			con.close();
-			
-			JOptionPane.showMessageDialog(null, "Cadastro de contribuinte realizado com sucesso!");
-			
-			inputNomeCadCont.setText("");
-			inputCpfCadCont.setText("");
-			inputIdadeCadCont.setText("");
-			inputEndCadCont.setText("");
-			inputContBanCadCont.setText("");			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -619,27 +559,21 @@ public class PainelContribuinte extends JPanel {
 	}
 	public void funcCadastraBem() {
 		try {
-			Connection con = DBConnection.faz_conexao();
-			String sql = "insert into bem(nome, tipo, valor,id_contribuinte) values (?, ?, ?, ?)";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			stmt.setString(1, nomeCadBem.getText());
-			stmt.setString(2, tipoCadBem.getText());
-			stmt.setFloat(3, Float.parseFloat(valorCadBem.getText()));
 			Contribuinte contri = (Contribuinte) comboBoxCadBem.getSelectedItem();
-			stmt.setInt(4, contri.getId());
-
-			stmt.execute();
-			stmt.close();
-			con.close();
-			
-			JOptionPane.showMessageDialog(null, "Cadastro de bem realizado com sucesso!");
-			
-			nomeCadBem.setText("");
-			tipoCadBem.setText("");
-			valorCadBem.setText("");
-			comboBoxCadBem.setSelectedIndex(0);			
+			boolean r = new DBCadastro().cadastroBem(
+					nomeCadBem.getText(),
+					tipoCadBem.getText(),
+					Float.parseFloat(valorCadBem.getText()),
+					contri.getId()
+					);
+			if(r) {
+				JOptionPane.showMessageDialog(null, "Cadastro de bem realizado com sucesso!");
+				
+				nomeCadBem.setText("");
+				tipoCadBem.setText("");
+				valorCadBem.setText("");
+				comboBoxCadBem.setSelectedIndex(0);	
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -648,31 +582,24 @@ public class PainelContribuinte extends JPanel {
 	}
 	public void funcCadastraDependente() {
 		try {
-			Connection con = DBConnection.faz_conexao();
-			String sql = "insert into dependente(nome, cpf, idade,endereco,id_contribuinte) values (?, ?, ?, ?, ?)";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			stmt.setString(1, nomeCadDep.getText());
-			stmt.setString(2, cpfCadDep.getText());
-			stmt.setInt(3, Integer.parseInt(idadeCadDep.getText()));
-			stmt.setString(4, endCadDep.getText());
-			
-			
 			Contribuinte contri = (Contribuinte) comboBoxCadDep.getSelectedItem();
-			stmt.setInt(5, contri.getId());
-
-			stmt.execute();
-			stmt.close();
-			con.close();
-			
-			JOptionPane.showMessageDialog(null, "Cadastro de bem realizado com sucesso!");
-			
-			nomeCadDep.setText("");
-			cpfCadDep.setText("");
-			idadeCadDep.setText("");
-			endCadDep.setText("");
-			comboBoxCadDep.setSelectedIndex(0);			
+			boolean r = new DBCadastro().cadastroDependente(
+					nomeCadDep.getText(),
+					cpfCadDep.getText(),
+					Integer.parseInt(idadeCadDep.getText()),
+					endCadDep.getText(),
+					contri.getId()
+					);
+			if(r) {
+				
+				JOptionPane.showMessageDialog(null, "Cadastro de dependente realizado com sucesso!");
+				
+				nomeCadDep.setText("");
+				cpfCadDep.setText("");
+				idadeCadDep.setText("");
+				endCadDep.setText("");
+				comboBoxCadDep.setSelectedIndex(0);			
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -681,31 +608,8 @@ public class PainelContribuinte extends JPanel {
 	}
 	private List<Contribuinte> criaListaContribuinte(String filtroCpf) {
 		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
-		try {
-			String sql;
-			Connection con = DBConnection.faz_conexao();
-			if(filtroCpf == null || filtroCpf == "") {
-				sql = "select * from contribuinte order by id_contribuinte DESC";				
-			}else {
-				sql = "select * from contribuinte where cpf like '%"+filtroCpf+"%' order by id_contribuinte DESC";
-			}
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next())
-            {
-				Contribuinte p = new Contribuinte();
-				p.setId(Integer.parseInt(rs.getString("id_contribuinte")));
-				p.setCpf(rs.getString("cpf"));
-				p.setNome(rs.getString("nome"));
-				p.setEndereco(rs.getString("endereco"));
-				p.setIdade(Integer.parseInt(rs.getString("idade")));
-				p.setContaBancaria(Integer.parseInt(rs.getString("conta_bancaria")));
-				pessoas.add(p);
-            }
-			stmt.close();
-			con.close();		
+		try {			
+			pessoas = new DBBusca().buscaContribuintes(filtroCpf);
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();

@@ -2,11 +2,14 @@ package apresentacao;
 
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import dados.Contribuinte;
@@ -15,7 +18,7 @@ import persistencia.DBConnection;
 public class ContribuinteTableModel extends AbstractTableModel {
 	List<Contribuinte> pessoas;
 	private String[] colunas = {"Id", "CPF", "Nome", "Endereço",
-			"Idade","Conta Bancaria"};
+			"Idade","Conta Bancaria","Ação"};
 	
 	@Override
 	public int getColumnCount() {
@@ -41,11 +44,8 @@ public class ContribuinteTableModel extends AbstractTableModel {
 	}
 	
 	public void setValueAt(Object valor, int linha, int coluna) {
-		if(coluna != 0) {
+		if(coluna != 0 && coluna != 6 && coluna != 1 ) {
 			switch (coluna) {
-			case 1:
-				pessoas.get(linha).setCpf((String)valor);
-				break;
 			case 2:
 				pessoas.get(linha).setNome((String)valor);
 				break;

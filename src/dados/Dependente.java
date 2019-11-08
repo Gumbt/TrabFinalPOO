@@ -1,6 +1,7 @@
 package dados;
 
 public class Dependente {
+	private int id;
 	private String cpf;
 	private String nome;
 	private int idade;
@@ -28,6 +29,12 @@ public class Dependente {
 	}
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	
