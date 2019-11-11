@@ -26,13 +26,19 @@ public class DBBusca {
 			f.printStackTrace();
 		}
 	}
-	public List<Contribuinte> buscaContribuintes(String filtroCpf) throws SQLException {
+	public List<Contribuinte> buscaContribuintes(String filtroCpf,boolean order) throws SQLException {
 		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
 		String sql;
-		if(filtroCpf == null || filtroCpf == "") {
-			sql = "select * from contribuinte order by id_contribuinte DESC";				
+		String orderby;
+		if(order) {
+			orderby = "nome ASC";
 		}else {
-			sql = "select * from contribuinte where cpf like '%"+filtroCpf+"%' order by id_contribuinte DESC";
+			orderby = "id_contribuinte DESC";
+		}
+		if(filtroCpf == null || filtroCpf == "") {
+			sql = "select * from contribuinte order by "+orderby;				
+		}else {
+			sql = "select * from contribuinte where cpf like '%"+filtroCpf+"%' order by "+orderby;
 		}
 		
 		PreparedStatement stmt = con.prepareStatement(sql);
@@ -53,13 +59,19 @@ public class DBBusca {
 		stmt.close();
 		return pessoas;
 	}
-	public List<PessoaJuridica> buscaPJ(String filtroCnpj) throws SQLException {
+	public List<PessoaJuridica> buscaPJ(String filtroCnpj,boolean order) throws SQLException {
 		List<PessoaJuridica> pessoas = new ArrayList<PessoaJuridica>();
 		String sql;
-		if(filtroCnpj == null || filtroCnpj == "") {
-			sql = "select * from pessoa_juridica order by id_pessoajuridica DESC";				
+		String orderby;
+		if(order) {
+			orderby = "nome_pj ASC";
 		}else {
-			sql = "select * from pessoa_juridica where cnpj like '%"+filtroCnpj+"%' order by id_pessoajuridica DESC";
+			orderby = "id_pessoajuridica DESC";
+		}
+		if(filtroCnpj == null || filtroCnpj == "") {
+			sql = "select * from pessoa_juridica order by "+orderby;				
+		}else {
+			sql = "select * from pessoa_juridica where cnpj like '%"+filtroCnpj+"%' order by "+orderby;
 		}
 		
 		PreparedStatement stmt = con.prepareStatement(sql);

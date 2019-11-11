@@ -609,7 +609,7 @@ public class PainelContribuinte extends JPanel {
 	private List<Contribuinte> criaListaContribuinte(String filtroCpf) {
 		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
 		try {			
-			pessoas = new DBBusca().buscaContribuintes(filtroCpf);
+			pessoas = new DBBusca().buscaContribuintes(filtroCpf,false);
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();
@@ -618,26 +618,12 @@ public class PainelContribuinte extends JPanel {
 	}
 	public void atualizaComboBox(JComboBox<Contribuinte> comboBox) {
 		comboBox.removeAllItems();
+		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
 		try {
-			Connection con = DBConnection.faz_conexao();
-			String sql = "select * from contribuinte order by nome";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next())
-            {
-				Contribuinte p = new Contribuinte();
-				p.setId(Integer.parseInt(rs.getString("id_contribuinte")));
-				p.setCpf(rs.getString("cpf"));
-				p.setNome(rs.getString("nome"));
-				p.setEndereco(rs.getString("endereco"));
-				p.setIdade(Integer.parseInt(rs.getString("idade")));
-				p.setContaBancaria(Integer.parseInt(rs.getString("conta_bancaria")));
+			pessoas = new DBBusca().buscaContribuintes(null,true);
+			for(Contribuinte p : pessoas) {
 				comboBox.addItem(p);
-            }
-			stmt.close();
-			con.close();		
+			}	
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();

@@ -6,6 +6,9 @@ public class PessoaJuridica {
 	private String nomePJ;
 	private String endereco;
 	private int numFuncionarios;
+	public String toString() {
+	    return this.nomePJ+" - "+this.cnpj;
+	}
 	public String getCnpj() {
 		return cnpj;
 	}

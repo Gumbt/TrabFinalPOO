@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
@@ -16,15 +17,27 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+
+import dados.Contribuinte;
+import dados.PessoaJuridica;
+import persistencia.DBBusca;
+import persistencia.DBCadastro;
+
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
 import javax.swing.JTable;
 import java.awt.Color;
+import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+import javax.swing.JFormattedTextField;
 
 public class PainelReceitas extends JPanel {
 
@@ -34,29 +47,14 @@ public class PainelReceitas extends JPanel {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
+	private JTextField numProtoc;
+	private JTextField valorReceita;
 	private JTextField textField_10;
 	private JTable table;
 	JLayeredPane painelCentral;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PainelReceitas frame = new PainelReceitas();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JComboBox comboBox;
+	private JComboBox comboBoxPJ;
+	private JTextField descricao;
 
 	/**
 	 * Create the frame.
@@ -65,7 +63,7 @@ public class PainelReceitas extends JPanel {
 		initComponents();
 	}
 	public void initComponents() {
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 560, 388);
 		setLayout(new BorderLayout(0, 0));
 		
 		painelCentral = new JLayeredPane();
@@ -108,52 +106,63 @@ public class PainelReceitas extends JPanel {
 		
 		JLabel lblCadastroDeReceita = new JLabel("Cadastro de receita");
 		
-		JLabel lblCpfContr = new JLabel("CPF do contribuinte:");
+		JLabel lblContr = new JLabel("Contribuinte:");
 		
 		JLabel lblNumProtoc = new JLabel("Num. Protoc.:");
 		
-		JLabel lblCnpj = new JLabel("CNPJ:");
-		
 		JLabel lblValor = new JLabel("Valor:");
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
+		numProtoc = new JTextField();
+		numProtoc.setColumns(10);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
+		valorReceita = new JTextField();
+		valorReceita.setColumns(10);
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				funcCadastraReceita();
+			}
+		});
+		
+		comboBox = new JComboBox();
+		
+		JLabel lblPessoaJridica = new JLabel("Pessoa J\u00FAridica:");
+		
+		comboBoxPJ = new JComboBox();
+		
+		JLabel lblDescricao = new JLabel("Descri\u00E7\u00E3o:");
+		
+		descricao = new JTextField();
+		descricao.setColumns(10);
 		GroupLayout gl_cadastro = new GroupLayout(cadastro);
 		gl_cadastro.setHorizontalGroup(
 			gl_cadastro.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_cadastro.createSequentialGroup()
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_cadastro.createSequentialGroup()
-							.addGap(103)
-							.addComponent(lblCadastroDeReceita))
-						.addGroup(gl_cadastro.createSequentialGroup()
-							.addGap(126)
-							.addComponent(btnSalvar))
+							.addContainerGap()
+							.addComponent(lblValor))
 						.addGroup(gl_cadastro.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblContr)
+								.addComponent(lblPessoaJridica)
 								.addComponent(lblNumProtoc)
-								.addComponent(lblCpfContr)
-								.addComponent(lblCnpj)
-								.addComponent(lblValor))
-							.addGap(26)
+								.addComponent(lblDescricao))
+							.addGap(22)
 							.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(37, GroupLayout.PREFERRED_SIZE))
+								.addComponent(descricao, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING, false)
+									.addComponent(numProtoc, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+									.addComponent(valorReceita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(comboBoxPJ, 0, 207, Short.MAX_VALUE)
+									.addComponent(comboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(btnSalvar))))
+						.addGroup(gl_cadastro.createSequentialGroup()
+							.addGap(135)
+							.addComponent(lblCadastroDeReceita)))
+					.addContainerGap(133, Short.MAX_VALUE))
 		);
 		gl_cadastro.setVerticalGroup(
 			gl_cadastro.createParallelGroup(Alignment.LEADING)
@@ -162,23 +171,27 @@ public class PainelReceitas extends JPanel {
 					.addComponent(lblCadastroDeReceita)
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCpfContr)
-						.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(lblContr)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(14)
+					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
+						.addComponent(comboBoxPJ, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPessoaJridica))
+					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNumProtoc)
-						.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCnpj)
-						.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(numProtoc, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblValor)
-						.addComponent(textField_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+						.addComponent(valorReceita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblDescricao)
+						.addComponent(descricao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(29)
 					.addComponent(btnSalvar)
-					.addGap(39))
+					.addContainerGap(115, Short.MAX_VALUE))
 		);
 		cadastro.setLayout(gl_cadastro);
 		
@@ -192,7 +205,17 @@ public class PainelReceitas extends JPanel {
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
 		
-		table = new JTable();
+		JLabel lblDigiteOCpf = new JLabel("Digite o CPF:");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		
+		JLabel lblReceitasTotais = new JLabel("Receitas totais:");
+		
+		JFormattedTextField formattedTextField = new JFormattedTextField();
+		formattedTextField.setEditable(false);
+		formattedTextField.setText("3524");
+		
+		JButton btnExcluir = new JButton("Remover");
 		GroupLayout gl_consultarReceitas = new GroupLayout(consultarReceitas);
 		gl_consultarReceitas.setHorizontalGroup(
 			gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
@@ -202,13 +225,23 @@ public class PainelReceitas extends JPanel {
 							.addGap(133)
 							.addComponent(lblConsultarReceitas))
 						.addGroup(gl_consultarReceitas.createSequentialGroup()
-							.addGap(33)
-							.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap()
+							.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblReceitasTotais)
+								.addComponent(lblDigiteOCpf))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnPesquisar))
+							.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_consultarReceitas.createSequentialGroup()
+									.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(btnPesquisar))
+								.addGroup(gl_consultarReceitas.createSequentialGroup()
+									.addComponent(formattedTextField, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
+									.addComponent(btnExcluir))))
 						.addGroup(gl_consultarReceitas.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(table, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		gl_consultarReceitas.setVerticalGroup(
@@ -218,55 +251,22 @@ public class PainelReceitas extends JPanel {
 					.addComponent(lblConsultarReceitas)
 					.addGap(18)
 					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPesquisar))
-					.addGap(11)
-					.addComponent(table, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+						.addComponent(btnPesquisar)
+						.addComponent(lblDigiteOCpf)
+						.addComponent(textField_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblReceitasTotais)
+						.addComponent(formattedTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnExcluir))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
 					.addContainerGap())
 		);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		consultarReceitas.setLayout(gl_consultarReceitas);
-		
-		JPanel alterarReceitas = new JPanel();
-		painelCentral.add(alterarReceitas, "name_7183845445072259");
-		
-		JLabel lblAlterarContribuinte = new JLabel("Alterar receitas");
-		GroupLayout gl_alterarReceitas = new GroupLayout(alterarReceitas);
-		gl_alterarReceitas.setHorizontalGroup(
-			gl_alterarReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarReceitas.createSequentialGroup()
-					.addGap(137)
-					.addComponent(lblAlterarContribuinte)
-					.addContainerGap(166, Short.MAX_VALUE))
-		);
-		gl_alterarReceitas.setVerticalGroup(
-			gl_alterarReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_alterarReceitas.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblAlterarContribuinte)
-					.addContainerGap(275, Short.MAX_VALUE))
-		);
-		alterarReceitas.setLayout(gl_alterarReceitas);
-		
-		JPanel removerReceitas = new JPanel();
-		painelCentral.add(removerReceitas, "name_7183864462826088");
-		
-		JLabel lblRemoverContribuinte = new JLabel("Remover receitas");
-		GroupLayout gl_removerReceitas = new GroupLayout(removerReceitas);
-		gl_removerReceitas.setHorizontalGroup(
-			gl_removerReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerReceitas.createSequentialGroup()
-					.addGap(120)
-					.addComponent(lblRemoverContribuinte)
-					.addContainerGap(126, Short.MAX_VALUE))
-		);
-		gl_removerReceitas.setVerticalGroup(
-			gl_removerReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_removerReceitas.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblRemoverContribuinte)
-					.addContainerGap(275, Short.MAX_VALUE))
-		);
-		removerReceitas.setLayout(gl_removerReceitas);
 		
 		JPanel menuLateral = new JPanel();
 		add(menuLateral, BorderLayout.WEST);
@@ -275,6 +275,8 @@ public class PainelReceitas extends JPanel {
 		btnNewButton.setBackground(new Color(143, 188, 143));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				atualizaComboBoxContribuinte(comboBox);
+				atualizaComboBoxPJ(comboBoxPJ);
 				switchPanels(cadastrarReceita);
 			}
 		});
@@ -286,22 +288,6 @@ public class PainelReceitas extends JPanel {
 				switchPanels(consultarReceitas);
 			}
 		});
-		
-		JButton btnAlterar = new JButton("Alterar");
-		btnAlterar.setBackground(new Color(143, 188, 143));
-		btnAlterar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels(alterarReceitas);
-			}
-		});
-		
-		JButton btnRemover = new JButton("Remover");
-		btnRemover.setBackground(new Color(143, 188, 143));
-		btnRemover.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels(removerReceitas);
-			}
-		});
 		GroupLayout gl_menuLateral = new GroupLayout(menuLateral);
 		gl_menuLateral.setHorizontalGroup(
 			gl_menuLateral.createParallelGroup(Alignment.LEADING)
@@ -309,9 +295,7 @@ public class PainelReceitas extends JPanel {
 					.addContainerGap()
 					.addGroup(gl_menuLateral.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnAlterar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnRemover, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_menuLateral.setVerticalGroup(
@@ -321,13 +305,65 @@ public class PainelReceitas extends JPanel {
 					.addComponent(btnNewButton)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnNewButton_1)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnAlterar)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnRemover)
-					.addContainerGap(164, Short.MAX_VALUE))
+					.addContainerGap(232, Short.MAX_VALUE))
 		);
 		menuLateral.setLayout(gl_menuLateral);
+		atualizaComboBoxContribuinte(comboBox);
+		atualizaComboBoxPJ(comboBoxPJ);
+	}
+	public void funcCadastraReceita() {
+		try {
+			Contribuinte contri = (Contribuinte) comboBox.getSelectedItem();
+			PessoaJuridica pj = (PessoaJuridica) comboBoxPJ.getSelectedItem();
+			boolean r = new DBCadastro().cadastroContracheque(
+					Integer.parseInt(numProtoc.getText()),
+					Float.parseFloat(valorReceita.getText()),
+					descricao.getText(),
+					contri.getId(),
+					pj.getCnpj(),
+					pj.getId()
+					);
+			if(r) {
+				
+				JOptionPane.showMessageDialog(null, "Cadastro de receita realizado com sucesso!");
+				
+				numProtoc.setText("");
+				valorReceita.setText("");
+				descricao.setText("");
+				comboBox.setSelectedIndex(0);
+				comboBoxPJ.setSelectedIndex(0);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void atualizaComboBoxContribuinte(JComboBox<Contribuinte> comboBox) {
+		comboBox.removeAllItems();
+		List<Contribuinte> pessoas = new ArrayList<Contribuinte>();
+		try {
+			pessoas = new DBBusca().buscaContribuintes(null,true);
+			for(Contribuinte p : pessoas) {
+				comboBox.addItem(p);
+			}	
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
+	}
+	public void atualizaComboBoxPJ(JComboBox<PessoaJuridica> comboBox) {
+		comboBox.removeAllItems();
+		List<PessoaJuridica> pessoas = new ArrayList<PessoaJuridica>();
+		try {
+			pessoas = new DBBusca().buscaPJ(null,true);
+			for(PessoaJuridica p : pessoas) {
+				comboBox.addItem(p);
+			}	
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
 	}
 	public void switchPanels(JPanel panel) {
 		painelCentral.removeAll();

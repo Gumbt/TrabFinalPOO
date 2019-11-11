@@ -198,7 +198,7 @@ public class PainelPessoaJuridica extends JPanel {
 
 			}
 		});
-		dataModel = new TableModelPJ(criaListaPJ(null));
+		
 		
 		JLabel lblCnpj_2 = new JLabel("CNPJ:");
 		
@@ -251,6 +251,7 @@ public class PainelPessoaJuridica extends JPanel {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		dataModel = new TableModelPJ(criaListaPJ(null));
 		table.setModel(dataModel);
 		consultarPessoaJuridica.setLayout(gl_consultarPessoaJuridica);
 		
@@ -324,7 +325,7 @@ public class PainelPessoaJuridica extends JPanel {
 	private List<PessoaJuridica> criaListaPJ(String filtroCnpj) {
 		List<PessoaJuridica> pessoas = new ArrayList<PessoaJuridica>();
 		try {			
-			pessoas = new DBBusca().buscaPJ(filtroCnpj);
+			pessoas = new DBBusca().buscaPJ(filtroCnpj,false);
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();
