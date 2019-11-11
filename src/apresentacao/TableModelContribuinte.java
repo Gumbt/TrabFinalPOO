@@ -13,9 +13,11 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import dados.Contribuinte;
+import persistencia.DBAlterar;
+import persistencia.DBCadastro;
 import persistencia.DBConnection;
 
-public class ContribuinteTableModel extends AbstractTableModel {
+public class TableModelContribuinte extends AbstractTableModel {
 	List<Contribuinte> pessoas;
 	private String[] colunas = {"Id", "CPF", "Nome", "Endereço",
 			"Idade","Conta Bancaria","Ação"};
@@ -35,7 +37,7 @@ public class ContribuinteTableModel extends AbstractTableModel {
     }
 	
 	public boolean isCellEditable(int linha, int coluna) {
-	    if (coluna < 1) {
+	    if (coluna < 1 || coluna == 1) {
 	    	return false;
 	    } 
 	    else {
@@ -44,7 +46,7 @@ public class ContribuinteTableModel extends AbstractTableModel {
 	}
 	
 	public void setValueAt(Object valor, int linha, int coluna) {
-		if(coluna != 0 && coluna != 6 && coluna != 1 ) {
+		if(coluna != 6) {
 			switch (coluna) {
 			case 2:
 				pessoas.get(linha).setNome((String)valor);
@@ -60,23 +62,20 @@ public class ContribuinteTableModel extends AbstractTableModel {
 				break;
 			}
 			try {
-				Connection con = DBConnection.faz_conexao();
-				String sql = "update contribuinte set nome = ?, cpf = ?, idade = ?,endereco = ?,conta_bancaria = ? where id_contribuinte = ?";
-				
-				PreparedStatement stmt = con.prepareStatement(sql);
-				
-				stmt.setString(1, pessoas.get(linha).getNome());
-				stmt.setString(2, pessoas.get(linha).getCpf());
-				stmt.setInt(3, pessoas.get(linha).getIdade());
-				stmt.setString(4, pessoas.get(linha).getEndereco());
-				stmt.setInt(5, pessoas.get(linha).getContaBancaria());
-				stmt.setInt(6, pessoas.get(linha).getId());
 	
-				stmt.execute();
-				stmt.close();
-				con.close();
+				boolean r = new DBAlterar().alteraContribuinte(
+						pessoas.get(linha).getNome(),
+						pessoas.get(linha).getCpf(),
+						pessoas.get(linha).getIdade(),
+						pessoas.get(linha).getEndereco(),
+						pessoas.get(linha).getContaBancaria(),
+						pessoas.get(linha).getId()
+						);
+				if(r) {
+					
+					JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
+				}
 				
-				JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
 				
 				
 			} catch (SQLException e) {
@@ -104,7 +103,7 @@ public class ContribuinteTableModel extends AbstractTableModel {
         return this.colunas[num];
     }
  
-	public ContribuinteTableModel(List<Contribuinte> p) {
+	public TableModelContribuinte(List<Contribuinte> p) {
 		pessoas = p;
 		
 		

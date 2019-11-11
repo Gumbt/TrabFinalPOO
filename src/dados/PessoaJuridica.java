@@ -1,6 +1,7 @@
 package dados;
 
 public class PessoaJuridica {
+	private int id;
 	private String cnpj;
 	private String nomePJ;
 	private String endereco;
@@ -28,6 +29,12 @@ public class PessoaJuridica {
 	}
 	public void setNumFuncionarios(int numFuncionarios) {
 		this.numFuncionarios = numFuncionarios;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 }

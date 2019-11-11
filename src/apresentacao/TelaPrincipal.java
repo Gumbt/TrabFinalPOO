@@ -141,7 +141,8 @@ public class TelaPrincipal extends JFrame {
 		JButton btnNewButton_3 = new JButton("Pessoa Jur\u00EDdica");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(panel5);
+				PainelPessoaJuridica ppj = new PainelPessoaJuridica();
+				switchPanels(ppj);
 			}
 		});
 		panel_1.add(btnNewButton_3);

@@ -68,7 +68,7 @@ public class PainelContribuinte extends JPanel {
 	private JTextField cpfCadDep;
 	private JTextField idadeCadDep;
 	private JTextField endCadDep;
-	private ContribuinteTableModel dataModel;
+	private TableModelContribuinte dataModel;
 	private JComboBox comboBoxCadBem;
 	private JComboBox comboBoxCadDep;
 
@@ -229,7 +229,7 @@ public class PainelContribuinte extends JPanel {
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
+				dataModel = new TableModelContribuinte(criaListaContribuinte(searchInput.getText()));
 				
 				table.setModel(dataModel);
 				TableColumn colunaEstado = table.getColumnModel().getColumn(6);
@@ -237,7 +237,7 @@ public class PainelContribuinte extends JPanel {
 				colunaEstado.setCellRenderer(testBtn);
 			}
 		});
-		dataModel = new ContribuinteTableModel(criaListaContribuinte(null));
+		dataModel = new TableModelContribuinte(criaListaContribuinte(null));
 		
 		JLabel lblCpf_2 = new JLabel("CPF:");
 		
@@ -476,7 +476,7 @@ public class PainelContribuinte extends JPanel {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				searchInput.setText("");
-				dataModel = new ContribuinteTableModel(criaListaContribuinte(searchInput.getText()));
+				dataModel = new TableModelContribuinte(criaListaContribuinte(searchInput.getText()));
 				table.setModel(dataModel);
 				
 				TableColumn colunaEstado = table.getColumnModel().getColumn(6);//cria os botoes de ver +

@@ -16,38 +16,33 @@ import javax.swing.border.EmptyBorder;
 import dados.Bem;
 import dados.Contribuinte;
 import dados.Dependente;
+import persistencia.DBBusca;
 import persistencia.DBConnection;
+import persistencia.DBDeleta;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VisualisarBensEDependentes extends JFrame {
 
+	/**
+	 * 
+	 */
 	private JPanel contentPane;
 	private JTable tabelaBens;
 	private JTable tabelaDependentes;
-	private BemTableModel dataModelBens;
-	private DependenteTableModel dataModelDependentes;
+	private TableModelBem dataModelBens;
+	private TableModelDependente dataModelDependentes;
+	private int idUsuario;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VisualisarBensEDependentes frame = new VisualisarBensEDependentes(1,"teste");
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -61,6 +56,7 @@ public class VisualisarBensEDependentes extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
+		idUsuario = idUser;
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 		
@@ -71,68 +67,74 @@ public class VisualisarBensEDependentes extends JFrame {
 		JLabel lblDependentesDe = new JLabel("Dependentes de "+nomeUser+": ");
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		JButton btnRemover = new JButton("Remover");
+		btnRemover.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deletaBem();
+			}
+		});
+		
+		JButton btnRemover_1 = new JButton("Remover");
+		btnRemover_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deletaDependente();
+			}
+		});
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+			gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
-						.addComponent(lblBensDe, Alignment.LEADING)
-						.addComponent(lblDependentesDe, Alignment.LEADING))
+						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+						.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+							.addComponent(lblBensDe)
+							.addPreferredGap(ComponentPlacement.RELATED, 343, Short.MAX_VALUE)
+							.addComponent(btnRemover))
+						.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+							.addComponent(lblDependentesDe)
+							.addPreferredGap(ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
+							.addComponent(btnRemover_1)))
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblBensDe)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblBensDe)
+						.addComponent(btnRemover))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblDependentesDe)
+					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblDependentesDe)
+						.addComponent(btnRemover_1))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(35, Short.MAX_VALUE))
+					.addContainerGap(45, Short.MAX_VALUE))
 		);
 		
 		tabelaDependentes = new JTable();
 		scrollPane_1.setViewportView(tabelaDependentes);
 		
-		dataModelDependentes = new DependenteTableModel(criaListaDependente(idUser));
+		dataModelDependentes = new TableModelDependente(criaListaDependente(idUser));
 		tabelaDependentes.setModel(dataModelDependentes);
 		
 		tabelaBens = new JTable();
 		scrollPane.setViewportView(tabelaBens);
 		panel.setLayout(gl_panel);
 		
-		dataModelBens = new BemTableModel(criaListaBens(idUser));
+		dataModelBens = new TableModelBem(criaListaBens(idUser));
 		tabelaBens.setModel(dataModelBens);
 	}
 	private List<Bem> criaListaBens(int idContri) {
 		List<Bem> bens = new ArrayList<Bem>();
 		try {
-			String sql;
-			Connection con = DBConnection.faz_conexao();
-
-			sql = "select * from bem where id_contribuinte = "+idContri+" order by id_bem DESC";				
-
+			bens = new DBBusca().listaBens(idContri);
 			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next())
-            {
-				Bem p = new Bem();
-				p.setId(Integer.parseInt(rs.getString("id_bem")));
-				p.setNome(rs.getString("nome"));
-				p.setTipo(rs.getString("tipo"));
-				p.setValor(Float.parseFloat(rs.getString("valor")));
-				bens.add(p);
-            }
-			stmt.close();
-			con.close();		
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();
@@ -142,31 +144,54 @@ public class VisualisarBensEDependentes extends JFrame {
 	private List<Dependente> criaListaDependente(int idContri) {
 		List<Dependente> dependentes = new ArrayList<Dependente>();
 		try {
-			String sql;
-			Connection con = DBConnection.faz_conexao();
-
-			sql = "select * from dependente where id_contribuinte = "+idContri+" order by id_dependente DESC";				
-
+			dependentes = new DBBusca().listaDependente(idContri);
 			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next())
-            {
-				Dependente p = new Dependente();
-				p.setId(Integer.parseInt(rs.getString("id_dependente")));
-				p.setNome(rs.getString("nome"));
-				p.setCpf(rs.getString("cpf"));
-				p.setIdade(Integer.parseInt(rs.getString("idade")));
-				p.setEndereco(rs.getString("endereco"));
-				dependentes.add(p);
-            }
-			stmt.close();
-			con.close();		
 		} catch (SQLException f) {
 			// TODO Auto-generated catch block
 			f.printStackTrace();
 		}
 		return dependentes;
+	}
+	private void deletaBem() {
+		if(tabelaBens.getSelectedRowCount() == 1 ) {
+			int idBem = (int) tabelaBens.getModel().getValueAt(tabelaBens.getSelectedRow(), 0);
+			try {
+	
+				boolean r = new DBDeleta().deletaBem(idBem);
+				if(r) {
+					JOptionPane.showMessageDialog(null, "Bem deletado com sucesso",null, JOptionPane.PLAIN_MESSAGE, null);
+					
+				}
+				
+			} catch (SQLException f) {
+				// TODO Auto-generated catch block
+				f.printStackTrace();
+			}
+			dataModelBens = new TableModelBem(criaListaBens(idUsuario));
+			tabelaBens.setModel(dataModelBens);
+		}else {
+			JOptionPane.showMessageDialog(null, "Selecione um bem para deletar",null,JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	private void deletaDependente() {
+		if(tabelaDependentes.getSelectedRowCount() == 1 ) {
+			int idDependente = (int) tabelaDependentes.getModel().getValueAt(tabelaDependentes.getSelectedRow(), 0);
+			try {
+	
+				boolean r = new DBDeleta().deletaDependente(idDependente);
+				if(r) {
+					JOptionPane.showMessageDialog(null, "Dependente deletado com sucesso",null,JOptionPane.PLAIN_MESSAGE);
+					
+				}
+				
+			} catch (SQLException f) {
+				// TODO Auto-generated catch block
+				f.printStackTrace();
+			}
+			dataModelDependentes = new TableModelDependente(criaListaDependente(idUsuario));
+			tabelaDependentes.setModel(dataModelDependentes);
+		}else {
+			JOptionPane.showMessageDialog(null, "Selecione um dependente para deletar",null,JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

@@ -15,11 +15,13 @@ import javax.swing.table.AbstractTableModel;
 
 import dados.Bem;
 import dados.Contribuinte;
+import dados.Dependente;
+import persistencia.DBAlterar;
 import persistencia.DBConnection;
 
-public class BemTableModel extends AbstractTableModel {
-	List<Bem> bens;
-	private String[] colunas = {"Id", "Nome", "Tipo", "Valor"};
+public class TableModelDependente extends AbstractTableModel {
+	List<Dependente> dependentes;
+	private String[] colunas = {"Id", "Nome", "Cpf", "Idade", "Endereço"};
 	
 	@Override
 	public int getColumnCount() {
@@ -28,7 +30,7 @@ public class BemTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return bens.size();
+		return dependentes.size();
 	}
 	
 	public Class getColumnClass(int c) {
@@ -36,7 +38,7 @@ public class BemTableModel extends AbstractTableModel {
     }
 	
 	public boolean isCellEditable(int linha, int coluna) {
-	    if (coluna < 1) {
+	    if (coluna < 1 || coluna == 2) {
 	    	return false;
 	    } 
 	    else {
@@ -45,34 +47,29 @@ public class BemTableModel extends AbstractTableModel {
 	}
 	
 	public void setValueAt(Object valor, int linha, int coluna) {
+
 		switch (coluna) {
 			case 1:
-				bens.get(linha).setNome((String)valor);
-				break;
-			case 2:
-				bens.get(linha).setTipo((String)valor);
+				dependentes.get(linha).setNome((String)valor);
 				break;
 			case 3:
-				bens.get(linha).setValor((float)valor);
+				dependentes.get(linha).setIdade((int)valor);
+				break;
+			case 4:
+				dependentes.get(linha).setEndereco((String)valor);
 				break;
 		}
 		try {
-			Connection con = DBConnection.faz_conexao();
-			String sql = "update bem set nome = ?, tipo = ?, valor = ? where id_bem = ?";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			stmt.setString(1, bens.get(linha).getNome());
-			stmt.setString(2, bens.get(linha).getTipo());
-			stmt.setFloat(3, bens.get(linha).getValor());
-
-			stmt.setInt(4, bens.get(linha).getId());
-
-			stmt.execute();
-			stmt.close();
-			con.close();
-			
-			JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
+			boolean r = new DBAlterar().alteraDependente(
+					dependentes.get(linha).getNome(),
+					dependentes.get(linha).getIdade(),
+					dependentes.get(linha).getEndereco(),
+					dependentes.get(linha).getId()
+					);
+			if(r) {
+				
+				JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!");
+			}
 			
 			
 		} catch (SQLException e) {
@@ -86,10 +83,11 @@ public class BemTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int linha, int coluna) {
         switch(coluna){
-        	case 0: return bens.get(linha).getId();
-	        case 1: return bens.get(linha).getNome();
-	        case 2: return bens.get(linha).getTipo();
-	        case 3: return bens.get(linha).getValor();
+        	case 0: return dependentes.get(linha).getId();
+	        case 1: return dependentes.get(linha).getNome();
+	        case 2: return dependentes.get(linha).getCpf();
+	        case 3: return dependentes.get(linha).getIdade();
+	        case 4: return dependentes.get(linha).getEndereco();
         }   
         return null;
 	}
@@ -98,8 +96,8 @@ public class BemTableModel extends AbstractTableModel {
         return this.colunas[num];
     }
  
-	public BemTableModel(List<Bem> p) {
-		bens = p;
+	public TableModelDependente(List<Dependente> p) {
+		dependentes = p;
 		
 		
 	}

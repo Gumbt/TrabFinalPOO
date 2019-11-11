@@ -67,4 +67,19 @@ public class DBCadastro {
 		con.close();
 		return true;
 	}
+	public boolean cadastroPJ(String nome,String cnpj,String endereco,int nfunc) throws SQLException {
+		String sql = "insert into pessoa_juridica(nome_pj, cnpj, endereco,num_funcionarios) values (?, ?, ?, ?)";
+		
+		PreparedStatement stmt = con.prepareStatement(sql);
+		
+		stmt.setString(1, nome);
+		stmt.setString(2, cnpj);
+		stmt.setString(3, endereco);
+		stmt.setInt(4, nfunc);
+
+		stmt.execute();
+		stmt.close();
+		con.close();
+		return true;
+	}
 }
