@@ -44,6 +44,32 @@ public class DBDeleta {
 		
 		return true;
 	}
+	public boolean deletaContracheque(int idContracheque) throws SQLException {
+		String sql = "delete from contracheque where id_contracheque = ?";
+		
+		PreparedStatement stmt = con.prepareStatement(sql);
+		
+		stmt.setInt(1, idContracheque);
+
+		stmt.execute();
+		stmt.close();
+		con.close();
+		
+		return true;
+	}
+	public boolean deletaNotaFiscal(int idNotaFiscal) throws SQLException {
+		String sql = "delete from nota_fiscal where id_notafiscal = ?";
+		
+		PreparedStatement stmt = con.prepareStatement(sql);
+		
+		stmt.setInt(1, idNotaFiscal);
+
+		stmt.execute();
+		stmt.close();
+		con.close();
+		
+		return true;
+	}
 	public boolean deletaPJ(int idPJ) throws SQLException {
 		String sql = "delete from pessoa_juridica where id_pessoajuridica = ?";
 		

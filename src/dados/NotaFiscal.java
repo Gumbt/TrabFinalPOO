@@ -1,9 +1,11 @@
 package dados;
 
 public class NotaFiscal {
+	private int id;
 	private int numProtocolo;
 	private String cnpj;
 	private float valor;
+	private String descricao;
 	public int getNumProtocolo() {
 		return numProtocolo;
 	}
@@ -21,6 +23,18 @@ public class NotaFiscal {
 	}
 	public void setValor(float valor) {
 		this.valor = valor;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
 	

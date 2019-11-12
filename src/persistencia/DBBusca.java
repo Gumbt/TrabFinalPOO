@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dados.Bem;
+import dados.Contracheque;
 import dados.Contribuinte;
 import dados.Dependente;
+import dados.NotaFiscal;
 import dados.PessoaJuridica;
 
 
@@ -149,5 +151,77 @@ public class DBBusca {
 			f.printStackTrace();
 		}
 		return dependentes;
+	}
+	public List<Contracheque> listaContracheque(String cpfContri) throws SQLException {
+		List<Contracheque> cc = new ArrayList<Contracheque>();
+		try {
+			String sql1;
+			int idContri = 0;
+			sql1 = "select * from contribuinte where cpf = '"+cpfContri+"'";
+			PreparedStatement stmt1 = con.prepareStatement(sql1);
+			ResultSet rs1 = stmt1.executeQuery();
+			while(rs1.next())
+            {
+				idContri = rs1.getInt("id_contribuinte");
+            }
+			String sql;
+			sql = "select * from contracheque where id_contribuinte = "+idContri+" order by id_contracheque DESC";				
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next())
+            {
+				Contracheque p = new Contracheque();
+				p.setId(Integer.parseInt(rs.getString("id_contracheque")));
+				p.setDescricao(rs.getString("descricao"));
+				p.setNumProtocolo(rs.getInt("num_protoc"));
+				p.setCnpj(rs.getString("cnpj"));
+				p.setValor(rs.getFloat("valor"));
+				cc.add(p);
+            }
+			stmt.close();
+			con.close();		
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
+		return cc;
+	}
+	public List<NotaFiscal> listaNotaFiscal(String cpfContri) throws SQLException {
+		List<NotaFiscal> cc = new ArrayList<NotaFiscal>();
+		try {
+			String sql1;
+			int idContri = 0;
+			sql1 = "select * from contribuinte where cpf = '"+cpfContri+"'";
+			PreparedStatement stmt1 = con.prepareStatement(sql1);
+			ResultSet rs1 = stmt1.executeQuery();
+			while(rs1.next())
+            {
+				idContri = rs1.getInt("id_contribuinte");
+            }
+			String sql;
+			sql = "select * from nota_fiscal where id_contribuinte = "+idContri+" order by id_notafiscal DESC";				
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next())
+            {
+				NotaFiscal p = new NotaFiscal();
+				p.setId(Integer.parseInt(rs.getString("id_notafiscal")));
+				p.setDescricao(rs.getString("descricao"));
+				p.setNumProtocolo(rs.getInt("num_protoc"));
+				p.setCnpj(rs.getString("cnpj"));
+				p.setValor(rs.getFloat("valor"));
+				cc.add(p);
+            }
+			stmt.close();
+			con.close();		
+		} catch (SQLException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
+		return cc;
 	}
 }

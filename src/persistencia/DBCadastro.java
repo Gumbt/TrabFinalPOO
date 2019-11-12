@@ -81,8 +81,25 @@ public class DBCadastro {
 		return true;
 	}
 	public boolean cadastroContracheque(int numProtoc, float valorReceita, String descricao, int idContr, String cnpj, int idPJ) throws SQLException {
-		Connection con = DBConnection.faz_conexao();
 		String sql = "insert into contracheque(descricao, valor, num_protoc, cnpj, id_pessoajuridica, id_contribuinte) values (?, ?, ?, ?, ?, ?)";
+		
+		PreparedStatement stmt = con.prepareStatement(sql);
+		
+		stmt.setString(1, descricao);
+		stmt.setFloat(2, valorReceita);
+		stmt.setInt(3, numProtoc);
+		stmt.setString(4, cnpj);
+		stmt.setInt(5, idPJ);
+		stmt.setInt(6, idContr);
+
+		stmt.execute();
+		stmt.close();
+		con.close();
+		
+		return true;
+	}
+	public boolean cadastroNotaFiscal(int numProtoc, float valorReceita, String descricao, int idContr, String cnpj, int idPJ) throws SQLException {
+		String sql = "insert into nota_fiscal(descricao, valor, num_protoc, cnpj, id_pessoajuridica, id_contribuinte) values (?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement stmt = con.prepareStatement(sql);
 		

@@ -18,7 +18,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import dados.Contracheque;
+import dados.NotaFiscal;
 import dados.Contribuinte;
 import dados.PessoaJuridica;
 import persistencia.DBBusca;
@@ -41,29 +41,29 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JFormattedTextField;
 
-public class PainelReceitas extends JPanel {
+public class PainelDespesas extends JPanel {
 
-	private JPanel cadastrarReceita;
+	private JPanel cadastrarDespesa;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField numProtoc;
-	private JTextField valorReceita;
+	private JTextField valorDespesa;
 	private JTextField searchInput;
 	private JTable table;
 	JLayeredPane painelCentral;
 	private JComboBox comboBox;
 	private JComboBox comboBoxPJ;
 	private JTextField descricao;
-	private TableModelContracheque dataModel;
+	private TableModelNotaFiscal dataModel;
 	private JFormattedTextField boxTotal;
 
 	/**
 	 * Create the frame.
 	 */
-	public PainelReceitas() {
+	public PainelDespesas() {
 		initComponents();
 	}
 	public void initComponents() {
@@ -73,10 +73,10 @@ public class PainelReceitas extends JPanel {
 		painelCentral = new JLayeredPane();
 		add(painelCentral);
 		painelCentral.setLayout(new CardLayout(0, 0));
-		cadastrarReceita = new JPanel();
-		painelCentral.add(cadastrarReceita, "name_7182598454947182");
-		cadastrarReceita.setBorder(new EmptyBorder(5, 5, 5, 5));
-		cadastrarReceita.setLayout(new BorderLayout(0, 0));
+		cadastrarDespesa = new JPanel();
+		painelCentral.add(cadastrarDespesa, "name_7182598454947182");
+		cadastrarDespesa.setBorder(new EmptyBorder(5, 5, 5, 5));
+		cadastrarDespesa.setLayout(new BorderLayout(0, 0));
 		
 		JPanel cadastro = new JPanel();
 		
@@ -106,9 +106,9 @@ public class PainelReceitas extends JPanel {
 		textField_4.setColumns(10);
 		
 		JButton button = new JButton("Salvar");
-		cadastrarReceita.add(cadastro);
+		cadastrarDespesa.add(cadastro);
 		
-		JLabel lblCadastroDeReceita = new JLabel("Cadastro de receita");
+		JLabel lblCadastroDeDespesa = new JLabel("Cadastro de despesa");
 		
 		JLabel lblContr = new JLabel("Contribuinte:");
 		
@@ -119,13 +119,13 @@ public class PainelReceitas extends JPanel {
 		numProtoc = new JTextField();
 		numProtoc.setColumns(10);
 		
-		valorReceita = new JTextField();
-		valorReceita.setColumns(10);
+		valorDespesa = new JTextField();
+		valorDespesa.setColumns(10);
 		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				funcCadastraReceita();
+				funcCadastraDespesa();
 			}
 		});
 		
@@ -159,20 +159,20 @@ public class PainelReceitas extends JPanel {
 								.addComponent(descricao, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING, false)
 									.addComponent(numProtoc, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-									.addComponent(valorReceita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(valorDespesa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addComponent(comboBoxPJ, 0, 207, Short.MAX_VALUE)
 									.addComponent(comboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(btnSalvar))))
 						.addGroup(gl_cadastro.createSequentialGroup()
 							.addGap(135)
-							.addComponent(lblCadastroDeReceita)))
+							.addComponent(lblCadastroDeDespesa)))
 					.addContainerGap(133, Short.MAX_VALUE))
 		);
 		gl_cadastro.setVerticalGroup(
 			gl_cadastro.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_cadastro.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblCadastroDeReceita)
+					.addComponent(lblCadastroDeDespesa)
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblContr)
@@ -188,7 +188,7 @@ public class PainelReceitas extends JPanel {
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblValor)
-						.addComponent(valorReceita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(valorDespesa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_cadastro.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblDescricao)
@@ -199,18 +199,18 @@ public class PainelReceitas extends JPanel {
 		);
 		cadastro.setLayout(gl_cadastro);
 		
-		JPanel consultarReceitas = new JPanel();
-		painelCentral.add(consultarReceitas, "name_7183621705109210");
+		JPanel consultarDespesas = new JPanel();
+		painelCentral.add(consultarDespesas, "name_7183621705109210");
 		
 		searchInput = new JTextField();
 		searchInput.setColumns(10);
 		
-		JLabel lblConsultarReceitas = new JLabel("Consultar Receitas");
+		JLabel lblConsultarDespesas = new JLabel("Consultar Despesas");
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel = new TableModelContracheque(criaListaContracheque(searchInput.getText()));
+				dataModel = new TableModelNotaFiscal(criaListaNotaFiscal(searchInput.getText()));
 				table.setModel(dataModel);
 			}
 		});
@@ -219,7 +219,7 @@ public class PainelReceitas extends JPanel {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		JLabel lblReceitasTotais = new JLabel("Receitas totais:");
+		JLabel lblDespesasTotais = new JLabel("Despesas totais:");
 		
 		boxTotal = new JFormattedTextField();
 		boxTotal.setEditable(false);
@@ -228,50 +228,50 @@ public class PainelReceitas extends JPanel {
 		JButton btnExcluir = new JButton("Remover");
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deletaContracheque();
+				deletaNotaFiscal();
 			}
 		});
-		GroupLayout gl_consultarReceitas = new GroupLayout(consultarReceitas);
-		gl_consultarReceitas.setHorizontalGroup(
-			gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_consultarReceitas.createSequentialGroup()
-					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_consultarReceitas.createSequentialGroup()
+		GroupLayout gl_consultarDespesas = new GroupLayout(consultarDespesas);
+		gl_consultarDespesas.setHorizontalGroup(
+			gl_consultarDespesas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_consultarDespesas.createSequentialGroup()
+					.addGroup(gl_consultarDespesas.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_consultarDespesas.createSequentialGroup()
 							.addGap(133)
-							.addComponent(lblConsultarReceitas))
-						.addGroup(gl_consultarReceitas.createSequentialGroup()
+							.addComponent(lblConsultarDespesas))
+						.addGroup(gl_consultarDespesas.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblReceitasTotais)
+							.addGroup(gl_consultarDespesas.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDespesasTotais)
 								.addComponent(lblDigiteOCpf))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_consultarReceitas.createSequentialGroup()
+							.addGroup(gl_consultarDespesas.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_consultarDespesas.createSequentialGroup()
 									.addComponent(searchInput, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
 									.addGap(18)
 									.addComponent(btnPesquisar))
-								.addGroup(gl_consultarReceitas.createSequentialGroup()
+								.addGroup(gl_consultarDespesas.createSequentialGroup()
 									.addComponent(boxTotal, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
 									.addComponent(btnExcluir))))
-						.addGroup(gl_consultarReceitas.createSequentialGroup()
+						.addGroup(gl_consultarDespesas.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
-		gl_consultarReceitas.setVerticalGroup(
-			gl_consultarReceitas.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_consultarReceitas.createSequentialGroup()
+		gl_consultarDespesas.setVerticalGroup(
+			gl_consultarDespesas.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_consultarDespesas.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblConsultarReceitas)
+					.addComponent(lblConsultarDespesas)
 					.addGap(18)
-					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_consultarDespesas.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnPesquisar)
 						.addComponent(lblDigiteOCpf)
 						.addComponent(searchInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_consultarReceitas.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblReceitasTotais)
+					.addGroup(gl_consultarDespesas.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblDespesasTotais)
 						.addComponent(boxTotal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnExcluir))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -281,7 +281,7 @@ public class PainelReceitas extends JPanel {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		consultarReceitas.setLayout(gl_consultarReceitas);
+		consultarDespesas.setLayout(gl_consultarDespesas);
 		
 		JPanel menuLateral = new JPanel();
 		add(menuLateral, BorderLayout.WEST);
@@ -292,7 +292,7 @@ public class PainelReceitas extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				atualizaComboBoxContribuinte(comboBox);
 				atualizaComboBoxPJ(comboBoxPJ);
-				switchPanels(cadastrarReceita);
+				switchPanels(cadastrarDespesa);
 			}
 		});
 		
@@ -300,11 +300,11 @@ public class PainelReceitas extends JPanel {
 		btnNewButton_1.setBackground(new Color(143, 188, 143));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel = new TableModelContracheque(criaListaContracheque(null));
+				dataModel = new TableModelNotaFiscal(criaListaNotaFiscal(null));
 				table.setModel(dataModel);
 				boxTotal.setText("");
 				searchInput.setText("");
-				switchPanels(consultarReceitas);
+				switchPanels(consultarDespesas);
 			}
 		});
 		GroupLayout gl_menuLateral = new GroupLayout(menuLateral);
@@ -330,19 +330,19 @@ public class PainelReceitas extends JPanel {
 		atualizaComboBoxContribuinte(comboBox);
 		atualizaComboBoxPJ(comboBoxPJ);
 		
-		dataModel = new TableModelContracheque(criaListaContracheque(null));
+		dataModel = new TableModelNotaFiscal(criaListaNotaFiscal(null));
 		table.setModel(dataModel);
 	}
-	private List<Contracheque> criaListaContracheque(String filtroCpf) {
-		List<Contracheque> cc = new ArrayList<Contracheque>();
+	private List<NotaFiscal> criaListaNotaFiscal(String filtroCpf) {
+		List<NotaFiscal> cc = new ArrayList<NotaFiscal>();
 		try {
 			if(filtroCpf != null && filtroCpf != "") {
-				cc = new DBBusca().listaContracheque(filtroCpf);
+				cc = new DBBusca().listaNotaFiscal(filtroCpf);
 				if(cc.size()==0) {
 					JOptionPane.showMessageDialog(null, "Nenhum resultado encontrado!");
 				}else {
 					float valorTotal = 0;
-					for(Contracheque c : cc) {
+					for(NotaFiscal c : cc) {
 						valorTotal = valorTotal + c.getValor();
 					}
 					boxTotal.setText(String.valueOf(valorTotal));
@@ -354,12 +354,12 @@ public class PainelReceitas extends JPanel {
 		}
 		return cc;
 	}
-	private void deletaContracheque() {
+	private void deletaNotaFiscal() {
 		if(table.getSelectedRowCount() == 1 ) {
-			int idContracheque = (int) table.getModel().getValueAt(table.getSelectedRow(), 0);
+			int idNotaFiscal = (int) table.getModel().getValueAt(table.getSelectedRow(), 0);
 			try {
 	
-				boolean r = new DBDeleta().deletaContracheque(idContracheque);
+				boolean r = new DBDeleta().deletaNotaFiscal(idNotaFiscal);
 				if(r) {
 					JOptionPane.showMessageDialog(null, "Item deletado com sucesso",null, JOptionPane.PLAIN_MESSAGE, null);
 					
@@ -369,19 +369,19 @@ public class PainelReceitas extends JPanel {
 				// TODO Auto-generated catch block
 				f.printStackTrace();
 			}
-			dataModel = new TableModelContracheque(criaListaContracheque(searchInput.getText()));
+			dataModel = new TableModelNotaFiscal(criaListaNotaFiscal(searchInput.getText()));
 			table.setModel(dataModel);
 		}else {
 			JOptionPane.showMessageDialog(null, "Selecione um item para deletar",null,JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	public void funcCadastraReceita() {
+	public void funcCadastraDespesa() {
 		try {
 			Contribuinte contri = (Contribuinte) comboBox.getSelectedItem();
 			PessoaJuridica pj = (PessoaJuridica) comboBoxPJ.getSelectedItem();
-			boolean r = new DBCadastro().cadastroContracheque(
+			boolean r = new DBCadastro().cadastroNotaFiscal(
 					Integer.parseInt(numProtoc.getText()),
-					Float.parseFloat(valorReceita.getText()),
+					Float.parseFloat(valorDespesa.getText()),
 					descricao.getText(),
 					contri.getId(),
 					pj.getCnpj(),
@@ -389,10 +389,10 @@ public class PainelReceitas extends JPanel {
 					);
 			if(r) {
 				
-				JOptionPane.showMessageDialog(null, "Cadastro de receita realizado com sucesso!");
+				JOptionPane.showMessageDialog(null, "Cadastro de despesa realizado com sucesso!");
 				
 				numProtoc.setText("");
-				valorReceita.setText("");
+				valorDespesa.setText("");
 				descricao.setText("");
 				comboBox.setSelectedIndex(0);
 				comboBoxPJ.setSelectedIndex(0);

@@ -77,30 +77,6 @@ public class TelaPrincipal extends JFrame {
 		JLabel lblPainel = new JLabel("Bem vindo ao sistema de declara\u00E7\u00E3o de imposto");
 		panel1.add(lblPainel);
 		
-		JPanel panel2 = new JPanel();
-		layeredPane.add(panel2, "name_7181078832440889");
-		
-		JLabel lblPainel_1 = new JLabel("painel 2");
-		panel2.add(lblPainel_1);
-		
-		JPanel panel3 = new JPanel();
-		layeredPane.add(panel3, "name_7181082601325911");
-		
-		JLabel lblPainel_2 = new JLabel("painel 3");
-		panel3.add(lblPainel_2);
-		
-		JPanel panel4 = new JPanel();
-		layeredPane.add(panel4, "name_7181084648760399");
-		
-		JLabel lblPainel_3 = new JLabel("painel 4");
-		panel4.add(lblPainel_3);
-		
-		JPanel panel5 = new JPanel();
-		layeredPane.add(panel5, "name_7181086425300176");
-		
-		JLabel lblPainel_4 = new JLabel("painel 5");
-		panel5.add(lblPainel_4);
-		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
 		
@@ -133,7 +109,8 @@ public class TelaPrincipal extends JFrame {
 		JButton btnNewButton_2 = new JButton("Despesas");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switchPanels(panel4);
+				PainelDespesas pd = new PainelDespesas();
+				switchPanels(pd);
 			}
 		});
 		panel_1.add(btnNewButton_2);
