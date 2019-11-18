@@ -71,7 +71,23 @@ public class DBDeleta {
 		return true;
 	}
 	public boolean deletaPJ(int idPJ) throws SQLException {
-		String sql = "delete from pessoa_juridica where id_pessoajuridica = ?";
+		if(deletaNotaFiscalEContracheque(idPJ)) {
+			String sql = "delete from pessoa_juridica where id_pessoajuridica = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			stmt.setInt(1, idPJ);
+	
+			stmt.execute();
+			stmt.close();
+			con.close();
+			
+			return true;
+		}
+		return false;
+	}
+	public boolean deletaNotaFiscalEContracheque(int idPJ) throws SQLException {
+		String sql = "delete from nota_fiscal where id_pessoajuridica = ?";
 		
 		PreparedStatement stmt = con.prepareStatement(sql);
 		
@@ -79,9 +95,15 @@ public class DBDeleta {
 
 		stmt.execute();
 		stmt.close();
-		con.close();
+		
+		String sql2 = "delete from contracheque where id_pessoajuridica = ?";
+		PreparedStatement stmt2 = con.prepareStatement(sql2);
+		
+		stmt2.setInt(1, idPJ);
+
+		stmt2.execute();
+		stmt2.close();
 		
 		return true;
 	}
-	
 }
