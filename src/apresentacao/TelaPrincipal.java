@@ -5,28 +5,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Panel;
-import java.awt.Choice;
-import javax.swing.JTabbedPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.BoxLayout;
-import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import java.awt.event.ActionListener;
-import java.awt.Button;
-import javax.swing.JMenuItem;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 

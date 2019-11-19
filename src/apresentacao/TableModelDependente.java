@@ -2,22 +2,12 @@ package apresentacao;
 
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
-
-import dados.Bem;
-import dados.Contribuinte;
 import dados.Dependente;
 import persistencia.DBAlterar;
-import persistencia.DBConnection;
 
 public class TableModelDependente extends AbstractTableModel {
 	List<Dependente> dependentes;

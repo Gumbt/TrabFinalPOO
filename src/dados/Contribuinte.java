@@ -53,6 +53,30 @@ public class Contribuinte {
 	public void setId(int id) {
 		this.id = id;
 	}
+	public List<Dependente> getDependente() {
+		return dependente;
+	}
+	public void setDependente(List<Dependente> dependente) {
+		this.dependente = dependente;
+	}
+	public List<Bem> getBem() {
+		return bem;
+	}
+	public void setBem(List<Bem> bem) {
+		this.bem = bem;
+	}
+	public List<NotaFiscal> getDespesas() {
+		return despesas;
+	}
+	public void setDespesas(List<NotaFiscal> despesas) {
+		this.despesas = despesas;
+	}
+	public List<Contracheque> getReceitas() {
+		return receitas;
+	}
+	public void setReceitas(List<Contracheque> receitas) {
+		this.receitas = receitas;
+	}
 	
 	
 	

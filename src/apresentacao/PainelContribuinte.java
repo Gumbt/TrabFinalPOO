@@ -3,46 +3,28 @@ import java.awt.BorderLayout;
 
 import persistencia.DBBusca;
 import persistencia.DBCadastro;
-import persistencia.DBConnection;
-import java.awt.EventQueue;
 import dados.*;
-
-import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
-import java.awt.GridLayout;
 import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.JComboBox;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
 
 public class PainelContribuinte extends JPanel {

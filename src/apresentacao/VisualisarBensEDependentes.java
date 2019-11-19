@@ -1,10 +1,6 @@
 package apresentacao;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import dados.Bem;
-import dados.Contribuinte;
 import dados.Dependente;
 import persistencia.DBBusca;
-import persistencia.DBConnection;
 import persistencia.DBDeleta;
 
 import javax.swing.GroupLayout;
